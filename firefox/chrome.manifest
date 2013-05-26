@@ -1,0 +1,5 @@
+content	serverbutton	content/
+overlay chrome://browser/content/browser.xul chrome://serverbutton/content/serverbutton.xul
+
+skin serverbutton classic/1.0 skin/
+style chrome://serverbutton/content/serverbutton.xul chrome://serverbutton/skin/button.css

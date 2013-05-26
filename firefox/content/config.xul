@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<dialog id="serverbutton-configuration-dialog"
+	title="Configure domain"
+	buttons="accept,cancel,extra1"
+	buttonlabelextra1="Delete"
+	ondialogextra1="return ServerButtonConfigurationDialog.remove();"
+	ondialogaccept="return ServerButtonConfigurationDialog.save();"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	onload="ServerButtonConfigurationDialog.init();"
+	>
+	<script src="config.js"/>
+	<label id="title-host" class="header"/>
+	<label control="serverbutton-configuration-type"
+		value="Type"/>
+	<menulist id="serverbutton-configuration-type">
+		<menupopup>
+			<menuitem label="rdesktop" value="rdesktop" id="type-rdesktop"/>
+			<menuitem label="ssh" value="ssh" id="type-ssh"/>
+			<menuitem label="vmware" value="vmware" id="type-vmware"/>
+			<menuitem label="ftp" value="ftp" id="type-ftp"/>
+		</menupopup>
+	</menulist>
+	<label control="serverbutton-configuration-host"
+		value="Host"/>
+	<textbox id="serverbutton-configuration-host" />
+	<label control="serverbutton-configuration-user"
+		value="Username"/>
+	<textbox id="serverbutton-configuration-user" />
+	<label control="serverbutton-configuration-password"
+		value="Password"/>
+	<textbox id="serverbutton-configuration-password" type="password"/>
+</dialog>

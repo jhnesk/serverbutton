@@ -1,0 +1,8 @@
+
+toolbarbutton#serverbutton-toolbarbutton[config] {
+	list-style-image: url("chrome://serverbutton/skin/servericon-add.png");
+}
+toolbarbutton#serverbutton-toolbarbutton {
+	list-style-image: url("chrome://serverbutton/skin/servericon.png");
+}
+
