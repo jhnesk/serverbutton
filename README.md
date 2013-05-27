@@ -1,7 +1,7 @@
 serverbutton
 ============
 
-This is a simple firefox plugin to launch a command depending on the
+This is a simple firefox extension to launch a command depending on the
 domain loaded in the current tab.  It's intended purpose is to login to
 the webserver. That can be really useful when you need quick access to
 many different servers.
@@ -13,8 +13,9 @@ TODO:
 -----
 
 -	Replace bashscript with javascript
--	Preference dialog, where you can configure executables and types.
+-	Preference dialog, where you can configure executables and types
 -	Makefile to create installation file
+-	Extension for chrome
 
 License:
 --------
