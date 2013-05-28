@@ -5,7 +5,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>serverbutton@serverbutton.se</em:id>
 		<em:name>Server button</em:name>
-		<em:version>0.1</em:version>
+		<em:version>0.2.0</em:version>
 		<em:type>2</em:type>
 
 		<em:description>Connect to remote servers, configured by current domain.</em:description>

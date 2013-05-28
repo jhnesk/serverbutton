@@ -24,14 +24,30 @@ var ServerButtonConfigurationDialog = {
 		var config = window.arguments[0].input;
 		var key = window.arguments[0].key;
 
+		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+			                      .getService(Components.interfaces.nsIPrefService);
+		var commands = prefs.getBranch("extensions.serverbutton.command.").getChildList("", {});
+
 		document.getElementById("title-host").value = "Configure domain " + key;
 
-		var selected = document.getElementById("type-" + config.type);
-		if(selected) {
-			document.getElementById("serverbutton-configuration-type").selectedItem = selected;
-		} else {
-			document.getElementById("serverbutton-configuration-type").selectedIndex = 0;
+		var commandList = document.getElementById("serverbutton-configuration-type");
+		var selected;
+
+		for(var i = 0; i < commands.length; i++) {
+			var command = commands[i];
+			var item = document.createElement("menuitem");
+			item.setAttribute("label", command);
+			item.setAttribute("value", command);
+			item.setAttribute("id", "type-" + command);
+			commandList.firstChild.appendChild(item);
+			if(i == 0) {
+				selected = item;
+			} else if(config && command == config.type) {
+				selected = item;
+			}
 		}
+
+		commandList.selectedItem = selected;
 		document.getElementById("serverbutton-configuration-host").value = config.host;
 		document.getElementById("serverbutton-configuration-user").value = config.user;
 		document.getElementById("serverbutton-configuration-password").value = config.password;

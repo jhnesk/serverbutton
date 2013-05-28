@@ -77,15 +77,23 @@ var ServerButton = {
 	connect: function() {
 		var host = window.top.getBrowser().selectedBrowser.contentWindow.location.host;
 		var config = ServerButtonConfig[host];
+		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+		var commands = prefs.getBranch("extensions.serverbutton.command.");
 
-		if(config != null) {
+		if(config != null && commands.prefHasUserValue(config.type)) {
 			var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-			var file = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
-			file.append("bin");
-			file.append("serverbutton.sh");
+			var command = commands.getCharPref(config.type);
+			command = command.replace("$HOST", config.host);
+			command = command.replace("$USER", config.user);
+			command = command.replace("$PASS", config.password);
+
+			var args = command.split(" ");
+			var filename = args.shift();
+
+			var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+			file.initWithPath(filename);
 			process.init(file);
-			var args = new Array(config.type, config.host, config.user, config.password);
-			process.run(false, args, 4);
+			process.run(false, args, args.length);
 		}
 	},
 

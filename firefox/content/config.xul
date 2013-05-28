@@ -15,10 +15,6 @@
 		value="Type"/>
 	<menulist id="serverbutton-configuration-type">
 		<menupopup>
-			<menuitem label="rdesktop" value="rdesktop" id="type-rdesktop"/>
-			<menuitem label="ssh" value="ssh" id="type-ssh"/>
-			<menuitem label="vmware" value="vmware" id="type-vmware"/>
-			<menuitem label="ftp" value="ftp" id="type-ftp"/>
 		</menupopup>
 	</menulist>
 	<label control="serverbutton-configuration-host"
