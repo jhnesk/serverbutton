@@ -9,14 +9,6 @@ many different servers.
 Right now, it's pretty hardwired to my setup, but I'm planning to fix
 that after which I'll release it at mozilla.
 
-TODO:
------
-
--	Replace bashscript with javascript
--	Preference dialog, where you can configure executables and types
--	Makefile to create installation file
--	Extension for chrome
-
 License:
 --------
 
