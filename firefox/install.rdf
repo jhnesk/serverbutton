@@ -5,10 +5,11 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>serverbutton@serverbutton.se</em:id>
 		<em:name>Server button</em:name>
-		<em:version>0.2.0</em:version>
+		<em:version>0.2.1</em:version>
 		<em:type>2</em:type>
 
-		<em:optionsURL>chrome://serverbutton/content/preferences.xul</em:optionsURL>
+		<em:optionsURL>chrome://serverbutton/content/options.xul</em:optionsURL>
+		<em:optionsType>2</em:optionsType>
 
 		<em:description>Connect to remote servers, configured by current domain.</em:description>
 		<em:creator>Johan Ask</em:creator>

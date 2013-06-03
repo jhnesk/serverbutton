@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<setting pref="extensions.serverbutton.command.ssh" type="string" title="SSH: "/>
+	<setting pref="extensions.serverbutton.command.ftp" type="string" title="FTP: "/>
+	<setting pref="extensions.serverbutton.command.rdesktop" type="string" title="Windows remote desktop: "/>
+	<setting pref="extensions.serverbutton.command.vmware" type="string" title="VMware"/>
+</vbox>
