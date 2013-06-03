@@ -8,6 +8,8 @@
 		<em:version>0.2.0</em:version>
 		<em:type>2</em:type>
 
+		<em:optionsURL>chrome://serverbutton/content/preferences.xul</em:optionsURL>
+
 		<em:description>Connect to remote servers, configured by current domain.</em:description>
 		<em:creator>Johan Ask</em:creator>
 
