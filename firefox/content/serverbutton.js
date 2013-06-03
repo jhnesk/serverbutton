@@ -85,7 +85,7 @@ var ServerButton = {
 			var command = commands.getCharPref(config.type);
 			command = command.replace("$HOST", config.host);
 			command = command.replace("$USER", config.user);
-			command = command.replace("$PASS", config.password);
+			command = command.replace("$PASSWORD", config.password);
 
 			var args = command.split(" ");
 			var filename = args.shift();
