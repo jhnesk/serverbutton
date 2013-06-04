@@ -80,9 +80,13 @@ var ServerButton = {
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
 		var commands = prefs.getBranch("extensions.serverbutton.command.");
 
-		if(config != null && commands.prefHasUserValue(config.type)) {
-			var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-			var command = commands.getCharPref(config.type);
+		if(config != null) {
+			try {
+				var command = commands.getCharPref(config.type);
+			} catch(err) {
+				alert("Error: No command found for the selected type '" + config.type + "'.");
+				return;
+			}
 			command = command.replace("$HOST", config.host);
 			command = command.replace("$USER", config.user);
 			command = command.replace("$PASSWORD", config.password);
@@ -92,6 +96,8 @@ var ServerButton = {
 
 			var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 			file.initWithPath(filename);
+
+			var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
 			process.init(file);
 			process.run(false, args, args.length);
 		}
@@ -158,6 +164,6 @@ var ServerButton = {
 	},
 };
 
-window.addEventListener("load", function() {ServerButton.init()}, false);
-window.addEventListener("unload", function() {ServerButton.uninit()}, false);
+window.addEventListener("load", ServerButton.init, false);
+window.addEventListener("unload", ServerButton.uninit, false);
 ServerButton.loadConfig();
