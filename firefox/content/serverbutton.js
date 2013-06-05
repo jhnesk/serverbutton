@@ -36,9 +36,13 @@ var ServerButton_urlBarListener = {
 	onLocationChange: function(aProgress, aRequest, aURI)
 	{
 		if(aURI) {
-			ServerButton.setButtonState(aURI.host);
+			try {
+				ServerButton.setHost(aURI.host);
+			} catch(err) {
+				ServerButton.setHost(null);
+			}
 		} else {
-			ServerButton.setButtonState(null);
+			ServerButton.setHost(null);
 		}
 	},
 
@@ -49,6 +53,7 @@ var ServerButton_urlBarListener = {
 };
  
 var ServerButton = {
+	host: null,
 
 	init: function() {
 		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
@@ -58,25 +63,37 @@ var ServerButton = {
 		gBrowser.removeProgressListener(ServerButton_urlBarListener);
 	},
 
-	setButtonState: function(host) {
+	setHost: function(h) {
+		ServerButton.host = h;
+		ServerButton.updateButtonState();
+	},
+
+	updateButtonState: function() {
 		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = ServerButtonConfig[host];
+		var config = ServerButtonConfig[ServerButton.host];
 		if(config) {
 			button.removeAttribute("config");
 			button.setAttribute("oncommand", "ServerButton.connect();");
 			button.setAttribute("tooltiptext", "Connect to " + config.host);
 			document.getElementById("menuitem-connect").disabled=false;
-		} else {
+			button.disabled=false;
+		} else if(ServerButton.host) {
 			button.setAttribute("config", "true");
 			button.setAttribute("oncommand", "ServerButton.openConfig();");
 			button.setAttribute("tooltiptext", "Configure domain");
+			document.getElementById("menuitem-connect").disabled=true;
+			button.disabled=false;
+		} else {
+			button.setAttribute("config", "false");
+			button.removeAttribute("oncommand");
+			button.setAttribute("tooltiptext", "No domain");
+			button.disabled=true;
 			document.getElementById("menuitem-connect").disabled=true;
 		}
 	},
 
 	connect: function() {
-		var host = window.top.getBrowser().selectedBrowser.contentWindow.location.host;
-		var config = ServerButtonConfig[host];
+		var config = ServerButtonConfig[ServerButton.host];
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
 		var commands = prefs.getBranch("extensions.serverbutton.command.");
 
@@ -141,9 +158,8 @@ var ServerButton = {
 	},
 
 	openConfig: function() {
-		var host = window.top.getBrowser().selectedBrowser.contentWindow.location.host;
-		var config = ServerButtonConfig[host];
-		var param = {input:config,key:host,output:null};
+		var config = ServerButtonConfig[ServerButton.host];
+		var param = {input:config,key:ServerButton.host,output:null};
 
 		window.openDialog("chrome://serverbutton/content/config.xul", "serverbutton-configuration-dialog", "chrome,dialog,centerscreen,modal", param).focus();
 		if(param.output) {
@@ -154,12 +170,12 @@ var ServerButton = {
 				password: param.output.password
 			};
 			if(config.type) {
-				ServerButtonConfig[host] = config;
+				ServerButtonConfig[ServerButton.host] = config;
 			} else {
-				ServerButtonConfig[host] = null;
+				ServerButtonConfig[ServerButton.host] = null;
 			}
 			ServerButton.saveConfig();
-			ServerButton.setButtonState(host);
+			ServerButton.updateButtonState();
 		}
 	},
 };
