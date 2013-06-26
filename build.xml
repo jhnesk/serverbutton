@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="firefox" default="zip" basedir=".">
+<project name="serverbutton" default="firefox" basedir=".">
 
-	<target name="zip">
+	<target name="firefox">
+		<echo message="Building firefox installation file" />
 		<zip destfile="serverbutton.xpi" basedir="firefox" />
 	</target>
+
 </project>

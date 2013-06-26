@@ -75,16 +75,16 @@ var ServerButton = {
 			button.removeAttribute("config");
 			button.setAttribute("oncommand", "ServerButton.connect();");
 			button.setAttribute("tooltiptext", "Connect to " + config.host);
-			document.getElementById("menuitem-connect").disabled=false;
 			button.disabled=false;
+			document.getElementById("menuitem-connect").disabled=false;
 		} else if(ServerButton.host) {
 			button.setAttribute("config", "true");
 			button.setAttribute("oncommand", "ServerButton.openConfig();");
 			button.setAttribute("tooltiptext", "Configure domain");
-			document.getElementById("menuitem-connect").disabled=true;
 			button.disabled=false;
+			document.getElementById("menuitem-connect").disabled=true;
 		} else {
-			button.setAttribute("config", "false");
+			button.removeAttribute("config");
 			button.removeAttribute("oncommand");
 			button.setAttribute("tooltiptext", "No domain");
 			button.disabled=true;
@@ -94,10 +94,11 @@ var ServerButton = {
 
 	connect: function() {
 		var config = ServerButtonConfig[ServerButton.host];
-		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-		var commands = prefs.getBranch("extensions.serverbutton.command.");
 
 		if(config != null) {
+			var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+			var commands = prefs.getBranch("extensions.serverbutton.command.");
+
 			try {
 				var command = commands.getCharPref(config.type);
 			} catch(err) {

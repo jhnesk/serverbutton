@@ -7,9 +7,6 @@
 			label="Server button"
 			class="toolbarbutton-1 chromeclass-toolbar-additional"
 			type="menu-button"
-			tooltiptext="Configure domain"
-			oncommand="ServerButton.openConfig();"
-			config="true"
 			>
 			<menupopup>
 				<menuitem label="Connect"
@@ -23,4 +20,10 @@
 			</menupopup>
 		</toolbarbutton>
 	</toolbarpalette>
+	<keyset>
+		<key id="serverbutton-shortcut"
+			modifiers="control alt" key="o"
+			oncommand="ServerButton.connect();"
+			/>
+	</keyset>
 </overlay>

@@ -28,7 +28,7 @@ var ServerButtonConfigurationDialog = {
 			                      .getService(Components.interfaces.nsIPrefService);
 		var commands = prefs.getBranch("extensions.serverbutton.command.").getChildList("", {});
 
-		document.getElementById("title-host").value = "Configure domain " + key;
+		document.getElementById("title-host").value = key;
 
 		var commandList = document.getElementById("serverbutton-configuration-type");
 		var selected;
