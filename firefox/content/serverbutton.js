@@ -96,28 +96,16 @@ var ServerButton = {
 		var config = ServerButtonConfig[ServerButton.host];
 
 		if(config != null) {
-			var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-			var commands = prefs.getBranch("extensions.serverbutton.command.");
-
 			try {
-				var command = commands.getCharPref(config.type);
+				var command = new Command(config.type);
+				command.setHost(config.host);
+				command.setUser(config.user);
+				command.setPassword(config.password);
+				command.run();
 			} catch(err) {
+				alert(err);
 				alert("Error: No command found for the selected type '" + config.type + "'.");
-				return;
 			}
-			command = command.replace("$HOST", config.host);
-			command = command.replace("$USER", config.user);
-			command = command.replace("$PASSWORD", config.password);
-
-			var args = command.split(" ");
-			var filename = args.shift();
-
-			var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-			file.initWithPath(filename);
-
-			var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-			process.init(file);
-			process.run(false, args, args.length);
 		}
 	},
 

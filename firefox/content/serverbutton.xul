@@ -3,6 +3,7 @@
 <overlay id="serverbutton" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<toolbarpalette id="BrowserToolbarPalette">
 		<script src="serverbutton.js"/>
+		<script src="command.js"/>
 		<toolbarbutton id="serverbutton-toolbarbutton"
 			label="Server button"
 			class="toolbarbutton-1 chromeclass-toolbar-additional"
