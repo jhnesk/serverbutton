@@ -55,6 +55,8 @@ var ServerButton_urlBarListener = {
 var ServerButton = {
 	host: null,
 
+	configFile: new ConfigFileHandler(),
+
 	init: function() {
 		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
 	},
@@ -63,8 +65,8 @@ var ServerButton = {
 		gBrowser.removeProgressListener(ServerButton_urlBarListener);
 	},
 
-	setHost: function(h) {
-		ServerButton.host = h;
+	setHost: function(host) {
+		ServerButton.host = host;
 		ServerButton.updateButtonState();
 	},
 
@@ -109,42 +111,10 @@ var ServerButton = {
 		}
 	},
 
-	getConfigFile: function() {
-		var file = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("ProfD", Components.interfaces.nsIFile);
-		file.append("serverbutton");
-		file.append("config.json");
-		return file;
-	},
-
 	loadConfig: function() {
-		var file = ServerButton.getConfigFile();
-		if(!file.exists()) {
-			file.create(0, 0600);
-		}
-		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
-		istream.init(file, 0x01, 4, null);
-		var fileScriptableIO = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream); 
-		fileScriptableIO.init(istream);
-		istream.QueryInterface(Components.interfaces.nsILineInputStream); 
-		var fileContent = "";
-		var csize = 0; 
-		while ((csize = fileScriptableIO.available()) != 0)
-		{
-			fileContent += fileScriptableIO.read( csize );
-		}
-		fileScriptableIO.close();
-		istream.close();
-
-		ServerButtonConfig = JSON.parse(fileContent);
+		ServerButtonConfig = ServerButton.configFile.read();
 	},
 
-	saveConfig: function() {
-		var file = ServerButton.getConfigFile();
-		var stream = FileUtils.openFileOutputStream(file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
-		var jsonString = JSON.stringify(ServerButtonConfig);
-		stream.write(jsonString, jsonString.length);
-		stream.close();
-	},
 
 	openConfig: function() {
 		var config = ServerButtonConfig[ServerButton.host];
@@ -163,7 +133,7 @@ var ServerButton = {
 			} else {
 				ServerButtonConfig[ServerButton.host] = null;
 			}
-			ServerButton.saveConfig();
+			ServerButton.configFile.write(ServerButtonConfig);
 			ServerButton.updateButtonState();
 		}
 	},

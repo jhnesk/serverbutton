@@ -2,6 +2,7 @@
 <?xml-stylesheet href="chrome://serverbutton/skin/button.css" type="text/css"?>
 <overlay id="serverbutton" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<toolbarpalette id="BrowserToolbarPalette">
+		<script src="config-file.js"/>
 		<script src="serverbutton.js"/>
 		<script src="command.js"/>
 		<toolbarbutton id="serverbutton-toolbarbutton"
