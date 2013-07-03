@@ -120,7 +120,7 @@ var ServerButton = {
 		var config = ServerButtonConfig[ServerButton.host];
 		var param = {input:config,key:ServerButton.host,output:null};
 
-		window.openDialog("chrome://serverbutton/content/config.xul", "serverbutton-configuration-dialog", "chrome,dialog,centerscreen,modal", param).focus();
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
 		if(param.output) {
 			config = {
 				type: param.output.type,

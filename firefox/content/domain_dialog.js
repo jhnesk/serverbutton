@@ -25,7 +25,7 @@ var ServerButtonConfigurationDialog = {
 		var key = window.arguments[0].key;
 
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-			                      .getService(Components.interfaces.nsIPrefService);
+			.getService(Components.interfaces.nsIPrefService);
 		var commands = prefs.getBranch("extensions.serverbutton.command.").getChildList("", {});
 
 		document.getElementById("title-host").value = key;
@@ -48,9 +48,11 @@ var ServerButtonConfigurationDialog = {
 		}
 
 		commandList.selectedItem = selected;
-		document.getElementById("serverbutton-configuration-host").value = config.host;
-		document.getElementById("serverbutton-configuration-user").value = config.user;
-		document.getElementById("serverbutton-configuration-password").value = config.password;
+		if(config) {
+			document.getElementById("serverbutton-configuration-host").value = config.host;
+			document.getElementById("serverbutton-configuration-user").value = config.user;
+			document.getElementById("serverbutton-configuration-password").value = config.password;
+		}
 	},
 
 	save: function() {
@@ -70,4 +72,3 @@ var ServerButtonConfigurationDialog = {
 	},
 };
 
-ServerButtonConfigurationDialog.init();
