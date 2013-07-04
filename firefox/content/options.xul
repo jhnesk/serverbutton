@@ -1,8 +1,18 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<dialog
+	title="Server Button Options"
+	buttons="accept,cancel"
+	ondialogaccept="return optiondialog.save();"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	onload="optiondialog.init();"
+	>
+	<script src="options.js"/>
 
-<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<setting pref="extensions.serverbutton.command.ssh" type="string" title="SSH: "/>
-	<setting pref="extensions.serverbutton.command.ftp" type="string" title="FTP: "/>
-	<setting pref="extensions.serverbutton.command.rdesktop" type="string" title="Windows remote desktop: "/>
-	<setting pref="extensions.serverbutton.command.vmware" type="string" title="VMware"/>
-</vbox>
+	<groupbox id="commands">
+		<caption label="Edit commands"/>
+	</groupbox>
+	<hbox>
+		<button label="Add command" onclick="optiondialog.addType();"/>
+	</hbox>
+</dialog>

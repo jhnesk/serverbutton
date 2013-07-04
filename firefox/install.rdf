@@ -5,15 +5,14 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>serverbutton@jhnesk.se</em:id>
 		<em:name>Server Button</em:name>
-		<em:version>0.2.3</em:version>
+		<em:version>0.2.4</em:version>
 		<em:type>2</em:type>
 
 		<em:optionsURL>chrome://serverbutton/content/options.xul</em:optionsURL>
-		<em:optionsType>2</em:optionsType>
 
 		<em:description>Connect to remote servers, configured by current domain.</em:description>
 		<em:creator>Johan Ask</em:creator>
-		<em:homepageURL>https://github.com/jknesk/serverbutton/</em:homepageURL>
+		<em:homepageURL>https://github.com/jhnesk/serverbutton/</em:homepageURL>
 		<em:iconURL>chrome://serverbutton/skin/servericon.png</em:iconURL>
 		<em:icon64URL>chrome://serverbutton/skin/servericon.png</em:icon64URL>
 

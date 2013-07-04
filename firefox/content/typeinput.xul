@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<dialog
+	id="typeinput-dialog"
+	title="New type"
+	buttons="accept,cancel"
+	ondialogaccept="return typeinput.save();"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	>
+	<script src="typeinput.js" />
+
+	<label control="typeinput" value="Key:" />
+	<textbox id="typeinput" />
+</dialog>
