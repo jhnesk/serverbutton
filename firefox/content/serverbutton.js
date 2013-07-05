@@ -98,15 +98,21 @@ var ServerButton = {
 		var config = ServerButtonConfig[ServerButton.host];
 
 		if(config != null) {
+			var command;
 			try {
-				var command = new Command(config.type);
-				command.setHost(config.host);
-				command.setUser(config.user);
-				command.setPassword(config.password);
-				command.run();
-			} catch(err) {
-				alert(err);
+				command = new Command(config.type);
+			} catch(e) {
 				alert("Error: No command found for the selected type '" + config.type + "'.");
+				return;
+			}
+			command.setHost(config.host);
+			command.setUser(config.user);
+			command.setPassword(config.password);
+			try {
+				command.run();
+			} catch(e) {
+				alert("Error: Couldn't run the command. Check the configuration.");
+				return;
 			}
 		}
 	},
