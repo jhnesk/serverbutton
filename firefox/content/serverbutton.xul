@@ -14,6 +14,7 @@
 				<menuitem label="Connect"
 					oncommand="ServerButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
+					key="serverbutton-shortcut"
 					/>
 				<menuitem label="Edit current domain"
 					oncommand="ServerButton.openConfig();event.stopPropagation();"
@@ -24,7 +25,7 @@
 	</toolbarpalette>
 	<keyset>
 		<key id="serverbutton-shortcut"
-			modifiers="control alt" key="o"
+			modifiers="accel alt" key="o"
 			oncommand="ServerButton.connect();"
 			/>
 	</keyset>

@@ -137,7 +137,7 @@ var ServerButton = {
 			if(config.type) {
 				ServerButtonConfig[ServerButton.host] = config;
 			} else {
-				ServerButtonConfig[ServerButton.host] = null;
+				delete ServerButtonConfig[ServerButton.host];
 			}
 			ServerButton.configFile.write(ServerButtonConfig);
 			ServerButton.updateButtonState();
