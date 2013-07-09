@@ -18,9 +18,6 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Components.utils.import("resource://gre/modules/FileUtils.jsm");
-Components.utils.import("resource://gre/modules/AddonManager.jsm");
-
 var ServerButtonConfig = {};
 
 var ServerButton_urlBarListener = {

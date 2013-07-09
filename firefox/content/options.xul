@@ -7,12 +7,48 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	onload="optiondialog.init();"
 	>
+	<script src="config-file.js"/>
+	<script src="serverbutton.js"/>
 	<script src="options.js"/>
 
-	<groupbox id="commands">
-		<caption label="Edit commands"/>
-	</groupbox>
-	<hbox>
-		<button label="Add command" onclick="optiondialog.addType();"/>
-	</hbox>
+	<tabbox>
+		<tabs>
+			<tab label="Commands"/>
+			<tab label="Domain configuration"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel id="commandtab">
+				<vbox flex="1">
+					<groupbox id="commands" flex="1">
+						<caption label="Edit commands"/>
+					</groupbox>
+					<hbox>
+						<button label="Add command" onclick="optiondialog.addType();"/>
+					</hbox>
+				</vbox>
+			</tabpanel>
+			<tabpanel id="domaintab">
+				<vbox flex="1">
+					<listbox id="configlist" flex="1">
+						<listhead flex="1">
+							<listheader label="Domain"/>
+							<listheader label="Type"/>
+							<listheader label="Host"/>
+							<listheader label="User"/>
+						</listhead>
+						<listcols>
+							<listcol flex="1"/>
+							<listcol flex="1"/>
+							<listcol flex="1"/>
+							<listcol flex="1"/>
+						</listcols>
+					</listbox>
+					<hbox>
+						<button label="Import" onclick="optiondialog.importConfig();"/>
+						<button label="Export" onclick="optiondialog.exportConfig();"/>
+					</hbox>
+				</vbox>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
 </dialog>

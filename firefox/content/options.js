@@ -22,12 +22,16 @@ function OptionDialog() {
 
 	this.types = new Array();
 
+	this.configlist = new ConfigList();
+
 	this.init = function() {
 		var commands = this.getCommandList();
 		var length = commands.length;
 		for(var i = 0; i < length; i++) {
 			this.addCommand(commands[i]);
 		}
+
+		this.configlist.populate();
 	};
 
 	this.addCommand = function(type) {
@@ -85,6 +89,103 @@ function OptionDialog() {
 		var branch = prefs.getBranch("extensions.serverbutton.command.");
 		return branch.getChildList("", {}); 
 	};
+
+	this.importConfig = function() {
+		var file = this.selectImportFile();
+		if(file) {
+
+			var importFile = new ConfigFileHandler(file);
+			var importConfig = importFile.read();
+			var configFile = new ConfigFileHandler();
+			var currentConfig = configFile.read();
+
+			for(domain in importConfig) {
+				if(!importConfig.hasOwnProperty(domain)) continue;
+				if(!importConfig[domain]) continue;
+
+				currentConfig[domain] = importConfig[domain];
+			}
+			configFile.write(currentConfig);
+			this.configlist.clear();
+			this.configlist.populate();
+			ServerButton.loadConfig();
+		}
+	};
+
+	this.selectImportFile = function() {
+		try {
+			var nsIFilePicker = Components.interfaces.nsIFilePicker;
+			var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+			filePicker.init(window, "Select a file for import", nsIFilePicker.modeOpen);
+			filePicker.appendFilter("json", "*.json");
+
+			var res = filePicker.show();
+			if(res != nsIFilePicker.returnCancel) {
+				return filePicker.file;
+			}
+		} catch(e) {
+			alert(e);
+		}
+	};
+
+	this.exportConfig = function() {
+		var file = this.selectExportFile();
+		if(file) {
+			var exportConfig = new ConfigFileHandler(file);
+			var config = new ConfigFileHandler().read();
+			exportConfig.write(config);
+		}
+	};
+
+	this.selectExportFile = function() {
+		var nsIFilePicker = Components.interfaces.nsIFilePicker;
+		var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+		filePicker.init(window, "Select a file for export", nsIFilePicker.modeSave);
+		filePicker.appendFilter("json", "*.json");
+
+		var res = filePicker.show();
+		if(res != nsIFilePicker.returnCancel) {
+			return filePicker.file;
+		}
+	};
 }
 
-optiondialog = new OptionDialog();
+function ConfigList() {
+
+	this.configFile = new ConfigFileHandler();
+
+	this.clear = function() {
+		var list = document.getElementById("configlist");
+		var items = list.getElementsByTagName("listitem");
+		for(var i = 0; i < items.length; i++) {
+			list.removeChild(items[i]);
+		}
+	};
+
+	this.populate = function() {
+		var config = this.configFile.read();
+		var list = document.getElementById("configlist");
+
+		for(var domain in config) {
+			if(!config.hasOwnProperty(domain)) continue;
+			if(!config[domain]) continue;
+
+			var row = document.createElement("listitem");
+
+			this.addCell(row, domain);
+			this.addCell(row, config[domain].type);
+			this.addCell(row, config[domain].host);
+			this.addCell(row, config[domain].user);
+
+			list.appendChild(row);
+		}
+	};
+
+	this.addCell = function(row, label) {
+		var cell = document.createElement("listcell");
+		cell.setAttribute("label", label);
+		row.appendChild(cell);
+	};
+}
+
+var optiondialog = new OptionDialog();

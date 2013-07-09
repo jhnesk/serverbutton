@@ -18,7 +18,9 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function ConfigFileHandler() {
+Components.utils.import("resource://gre/modules/FileUtils.jsm");
+
+function ConfigFileHandler(f) {
 
 	this.getFile = function() {
 		var file = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("ProfD", Components.interfaces.nsIFile);
@@ -27,14 +29,15 @@ function ConfigFileHandler() {
 		return file;
 	};
 
-	this.read = function() {
-		var file = this.getFile();
+	this.file = f || this.getFile();
 
-		if(!file.exists()) {
-			file.create(0, 0600);
+	this.read = function() {
+
+		if(!this.file.exists()) {
+			this.file.create(0, 0600);
 		}
 		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
-		istream.init(file, 0x01, 4, null);
+		istream.init(this.file, 0x01, 4, null);
 		var fileScriptableIO = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream); 
 		fileScriptableIO.init(istream);
 		istream.QueryInterface(Components.interfaces.nsILineInputStream); 
@@ -51,8 +54,7 @@ function ConfigFileHandler() {
 
 	this.write = function(jsonObject) {
 		var content = JSON.stringify(jsonObject);
-		var file = this.getFile();
-		var stream = FileUtils.openFileOutputStream(file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
+		var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
 		stream.write(content, content.length);
 		stream.close();
 	};
