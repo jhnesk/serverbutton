@@ -143,6 +143,38 @@ function OptionDialog() {
 			return filePicker.file;
 		}
 	};
+
+	this.editAction = function() {
+		var domain = document.popupNode.firstChild.getAttribute("label");
+		var config = serverButtonConfig.get(domain);
+		var param = {input:config,key:domain,output:null};
+
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
+		if(param.output) {
+			config = {
+				type: param.output.type,
+				host: param.output.host,
+				user: param.output.user,
+				password: param.output.password
+			};
+			if(config.type) {
+				serverButtonConfig.set(domain, config);
+			} else {
+				serverButtonConfig.remove(domain);
+			}
+			serverButtonConfig.save();
+			this.configlist.clear();
+			this.configlist.populate();
+		}
+	};
+
+	this.deleteAction = function() {
+		var domain = document.popupNode.firstChild.getAttribute("label");
+		serverButtonConfig.remove(domain);
+		serverButtonConfig.save();
+		this.configlist.clear();
+		this.configlist.populate();
+	};
 }
 
 function ConfigList() {

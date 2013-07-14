@@ -28,7 +28,15 @@
 			</tabpanel>
 			<tabpanel id="domaintab">
 				<vbox flex="1">
-					<listbox id="configlist" flex="1">
+					<menupopup id="domainconfigmenu">
+						<menuitem label="Edit"
+							oncommand="optiondialog.editAction();"
+							/>
+						<menuitem label="Delete"
+							oncommand="optiondialog.deleteAction();"
+							/>
+					</menupopup>
+					<listbox id="configlist" flex="1" context="domainconfigmenu">
 						<listhead flex="1">
 							<listheader label="Domain"/>
 							<listheader label="Type"/>
