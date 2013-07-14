@@ -18,6 +18,8 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+Components.utils.import("resource://serverbutton/domain_config.js");
+
 function OptionDialog() {
 
 	this.types = new Array();
@@ -94,46 +96,39 @@ function OptionDialog() {
 		var file = this.selectImportFile();
 		if(file) {
 
-			var importFile = new ConfigFileHandler(file);
-			var importConfig = importFile.read();
-			var configFile = new ConfigFileHandler();
-			var currentConfig = configFile.read();
+			var importFile = new DomainConfig(file);
+			importFile.load();
+			var importConfig = importFile.getAll();
 
 			for(domain in importConfig) {
 				if(!importConfig.hasOwnProperty(domain)) continue;
 				if(!importConfig[domain]) continue;
 
-				currentConfig[domain] = importConfig[domain];
+				serverButtonConfig.set(domain, importFile.get(domain));
 			}
-			configFile.write(currentConfig);
+			serverButtonConfig.save();
 			this.configlist.clear();
 			this.configlist.populate();
-			ServerButton.loadConfig();
 		}
 	};
 
 	this.selectImportFile = function() {
-		try {
-			var nsIFilePicker = Components.interfaces.nsIFilePicker;
-			var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-			filePicker.init(window, "Select a file for import", nsIFilePicker.modeOpen);
-			filePicker.appendFilter("json", "*.json");
+		var nsIFilePicker = Components.interfaces.nsIFilePicker;
+		var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+		filePicker.init(window, "Select a file for import", nsIFilePicker.modeOpen);
+		filePicker.appendFilter("json", "*.json");
 
-			var res = filePicker.show();
-			if(res != nsIFilePicker.returnCancel) {
-				return filePicker.file;
-			}
-		} catch(e) {
-			alert(e);
+		var res = filePicker.show();
+		if(res != nsIFilePicker.returnCancel) {
+			return filePicker.file;
 		}
 	};
 
 	this.exportConfig = function() {
 		var file = this.selectExportFile();
 		if(file) {
-			var exportConfig = new ConfigFileHandler(file);
-			var config = new ConfigFileHandler().read();
-			exportConfig.write(config);
+			var exportConfig = new DomainConfig(file);
+			exportConfig.write(serverButtonConfig.getAll());
 		}
 	};
 
@@ -152,20 +147,18 @@ function OptionDialog() {
 
 function ConfigList() {
 
-	this.configFile = new ConfigFileHandler();
-
 	this.clear = function() {
 		var list = document.getElementById("configlist");
 		var items = list.getElementsByTagName("listitem");
-		for(var i = 0; i < items.length; i++) {
+		for(var i = items.length-1; i >= 0; i--) {
 			list.removeChild(items[i]);
 		}
 	};
 
 	this.populate = function() {
-		var config = this.configFile.read();
 		var list = document.getElementById("configlist");
 
+		var config = serverButtonConfig.getAll();
 		for(var domain in config) {
 			if(!config.hasOwnProperty(domain)) continue;
 			if(!config[domain]) continue;

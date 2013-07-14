@@ -18,9 +18,29 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+var EXPORTED_SYMBOLS = ["serverButtonConfig", "DomainConfig"];
+
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
-function ConfigFileHandler(f) {
+function DomainConfig(f) {
+
+	this.config = {};
+
+	this.get = function(domain) {
+		return this.config[domain];
+	};
+
+	this.set = function(domain, c) {
+		this.config[domain] = c;
+	};
+
+	this.remove = function(domain) {
+		delete this.config[domain];
+	};
+
+	this.getAll = function() {
+		return this.config;
+	};
 
 	this.getFile = function() {
 		var file = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("ProfD", Components.interfaces.nsIFile);
@@ -52,6 +72,14 @@ function ConfigFileHandler(f) {
 		return JSON.parse(content);
 	};
 
+	this.load = function() {
+		this.config = this.read();
+	};
+
+	this.save = function() {
+		this.write(this.config);
+	};
+
 	this.write = function(jsonObject) {
 		var content = JSON.stringify(jsonObject);
 		var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
@@ -59,3 +87,6 @@ function ConfigFileHandler(f) {
 		stream.close();
 	};
 }
+
+var serverButtonConfig = new DomainConfig();
+serverButtonConfig.load();

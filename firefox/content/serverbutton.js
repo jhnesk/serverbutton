@@ -18,7 +18,7 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var ServerButtonConfig = {};
+Components.utils.import("resource://serverbutton/domain_config.js");
 
 var ServerButton_urlBarListener = {
 	QueryInterface: function(aIID)
@@ -52,8 +52,6 @@ var ServerButton_urlBarListener = {
 var ServerButton = {
 	host: null,
 
-	configFile: new ConfigFileHandler(),
-
 	init: function() {
 		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
 	},
@@ -69,7 +67,7 @@ var ServerButton = {
 
 	updateButtonState: function() {
 		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = ServerButtonConfig[ServerButton.host];
+		var config = serverButtonConfig.get(ServerButton.host);
 		if(config) {
 			button.removeAttribute("config");
 			button.setAttribute("oncommand", "ServerButton.connect();");
@@ -92,7 +90,7 @@ var ServerButton = {
 	},
 
 	connect: function() {
-		var config = ServerButtonConfig[ServerButton.host];
+		var config = serverButtonConfig.get(ServerButton.host);
 
 		if(config != null) {
 			var command;
@@ -114,13 +112,8 @@ var ServerButton = {
 		}
 	},
 
-	loadConfig: function() {
-		ServerButtonConfig = ServerButton.configFile.read();
-	},
-
-
 	openConfig: function() {
-		var config = ServerButtonConfig[ServerButton.host];
+		var config = serverButtonConfig.get(ServerButton.host);
 		var param = {input:config,key:ServerButton.host,output:null};
 
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
@@ -132,11 +125,11 @@ var ServerButton = {
 				password: param.output.password
 			};
 			if(config.type) {
-				ServerButtonConfig[ServerButton.host] = config;
+				serverButtonConfig.set(ServerButton.host, config);
 			} else {
-				delete ServerButtonConfig[ServerButton.host];
+				serverButtonConfig.remove(ServerButton.host);
 			}
-			ServerButton.configFile.write(ServerButtonConfig);
+			serverButtonConfig.save();
 			ServerButton.updateButtonState();
 		}
 	},
@@ -144,4 +137,3 @@ var ServerButton = {
 
 window.addEventListener("load", ServerButton.init, false);
 window.addEventListener("unload", ServerButton.uninit, false);
-ServerButton.loadConfig();
