@@ -3,6 +3,7 @@
 <dialog
 	title="Server Button Options"
 	buttons="accept,cancel"
+	ondialogcancel="return optiondialog.cancel();"
 	ondialogaccept="return optiondialog.save();"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	onload="optiondialog.init();"
@@ -21,7 +22,7 @@
 						<caption label="Edit commands"/>
 					</groupbox>
 					<hbox>
-						<button label="Add command" onclick="optiondialog.addType();"/>
+						<button label="Add command" icon="add" onclick="optiondialog.addType();"/>
 					</hbox>
 				</vbox>
 			</tabpanel>
@@ -50,8 +51,8 @@
 						</listcols>
 					</listbox>
 					<hbox>
-						<button label="Import" onclick="optiondialog.importConfig();"/>
-						<button label="Export" onclick="optiondialog.exportConfig();"/>
+						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
+						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
 					</hbox>
 				</vbox>
 			</tabpanel>

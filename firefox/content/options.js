@@ -22,8 +22,6 @@ Components.utils.import("resource://serverbutton/configuration.js");
 
 function OptionDialog() {
 
-	this.types = new Array();
-
 	this.configlist = new ConfigList();
 
 	this.init = function() {
@@ -37,7 +35,6 @@ function OptionDialog() {
 	};
 
 	this.addCommand = function(type) {
-		this.types.push(type);
 
 		var dialog = document.getElementById("commands");
 		var id = "command-" + type;
@@ -46,6 +43,8 @@ function OptionDialog() {
 		label.setAttribute("control", id);
 		label.setAttribute("value", type + ":");
 
+		var hbox = document.createElement("hbox");
+
 		var textbox = document.createElement("textbox");
 		textbox.setAttribute("id", id);
 		var value = commandConfig.get(type) || "";
@@ -53,27 +52,52 @@ function OptionDialog() {
 		textbox.setAttribute("flex", "1");
 		textbox.setAttribute("style", "min-width: 30em;");
 
-		dialog.appendChild(label);
-		dialog.appendChild(textbox);
+		var removeButton = document.createElement("button");
+		removeButton.setAttribute("icon", "remove");
+		removeButton.setAttribute("label", "Remove");
+		removeButton.setAttribute("onclick", "optiondialog.removeCommand('" + type  + "');");
+
+		hbox.appendChild(textbox);
+		hbox.appendChild(removeButton);
+
+		var vbox = document.createElement("vbox");
+		vbox.setAttribute("id", "command-wrapper-" + type);
+		vbox.appendChild(label);
+		vbox.appendChild(hbox);
+		dialog.appendChild(vbox);
+	};
+
+	this.removeCommand = function(type) {
+		var promtService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+		if(promtService.confirm(window, "Remove command", "Are you sure you wan't to remove this command?")) {
+			commandConfig.remove(type);
+			var commandElement = document.getElementById("command-wrapper-" + type);
+			commandElement.parentNode.removeChild(commandElement);
+		}
 	};
 
 	this.addType = function() {
 		var param = {type:null};
 		window.openDialog("chrome://serverbutton/content/typeinput.xul", "typeinput-dialog", "chrome,dialog,centerscreen,modal", param).focus();
 		if(param.type) {
+			commandConfig.set(param.type, "");
 			this.addCommand(param.type);
 		}
 	};
 
 	this.save = function() {
+		var commands = commandConfig.getAll();
+		for(var type in commands) {
+			if(!commands.hasOwnProperty(type)) continue;
 
-		var length = this.types.length;
-		for(var i = 0; i < length; i++) {
-			var type = this.types[i];
 			var command = document.getElementById("command-" + type).value;
 			commandConfig.set(type, command);
 		}
 		commandConfig.save();
+	};
+
+	this.cancel = function() {
+		commandConfig.load();
 	};
 
 	this.importConfig = function() {
