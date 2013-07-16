@@ -20,10 +20,7 @@
 
 function Command(type) {
 
-	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-	var commands = prefs.getBranch("extensions.serverbutton.command.");
-	this.command = commands.getCharPref(type);
-	// throws exception if the command is not configured
+	this.command = commandConfig.get(type);
 
 	this.setHost = function(host) {
 		this.command = this.command.replace("$HOST", host);

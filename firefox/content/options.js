@@ -18,7 +18,7 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Components.utils.import("resource://serverbutton/domain_config.js");
+Components.utils.import("resource://serverbutton/configuration.js");
 
 function OptionDialog() {
 
@@ -27,10 +27,10 @@ function OptionDialog() {
 	this.configlist = new ConfigList();
 
 	this.init = function() {
-		var commands = this.getCommandList();
-		var length = commands.length;
-		for(var i = 0; i < length; i++) {
-			this.addCommand(commands[i]);
+		var commands = commandConfig.getAll();
+		for(var command in commands) {
+			if(!commands.hasOwnProperty(command)) continue;
+			this.addCommand(command);
 		}
 
 		this.configlist.populate();
@@ -48,7 +48,8 @@ function OptionDialog() {
 
 		var textbox = document.createElement("textbox");
 		textbox.setAttribute("id", id);
-		textbox.setAttribute("value", this.getCommand(type));
+		var value = commandConfig.get(type) || "";
+		textbox.setAttribute("value", value);
 		textbox.setAttribute("flex", "1");
 		textbox.setAttribute("style", "min-width: 30em;");
 
@@ -64,39 +65,22 @@ function OptionDialog() {
 		}
 	};
 
-	this.getCommand = function(type) {
-		try {
-			var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-			var commands = prefs.getBranch("extensions.serverbutton.command.");
-			return commands.getCharPref(type);
-		} catch(e) {
-			return "";
-		}
-	};
-
 	this.save = function() {
-		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-		var branch = prefs.getBranch("extensions.serverbutton.command.");
 
 		var length = this.types.length;
 		for(var i = 0; i < length; i++) {
 			var type = this.types[i];
 			var command = document.getElementById("command-" + type).value;
-			branch.setCharPref(type, command);
+			commandConfig.set(type, command);
 		}
-	};
-
-	this.getCommandList = function() {
-		var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-		var branch = prefs.getBranch("extensions.serverbutton.command.");
-		return branch.getChildList("", {}); 
+		commandConfig.save();
 	};
 
 	this.importConfig = function() {
 		var file = this.selectImportFile();
 		if(file) {
 
-			var importFile = new DomainConfig(file);
+			var importFile = new ConfigFile(file);
 			importFile.load();
 			var importConfig = importFile.getAll();
 
@@ -104,9 +88,9 @@ function OptionDialog() {
 				if(!importConfig.hasOwnProperty(domain)) continue;
 				if(!importConfig[domain]) continue;
 
-				serverButtonConfig.set(domain, importFile.get(domain));
+				domainConfig.set(domain, importFile.get(domain));
 			}
-			serverButtonConfig.save();
+			domainConfig.save();
 			this.configlist.clear();
 			this.configlist.populate();
 		}
@@ -127,8 +111,8 @@ function OptionDialog() {
 	this.exportConfig = function() {
 		var file = this.selectExportFile();
 		if(file) {
-			var exportConfig = new DomainConfig(file);
-			exportConfig.write(serverButtonConfig.getAll());
+			var exportConfig = new ConfigFile(file);
+			exportConfig.write(domainConfig.getAll());
 		}
 	};
 
@@ -146,7 +130,7 @@ function OptionDialog() {
 
 	this.editAction = function() {
 		var domain = document.popupNode.firstChild.getAttribute("label");
-		var config = serverButtonConfig.get(domain);
+		var config = domainConfig.get(domain);
 		var param = {input:config,key:domain,output:null};
 
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
@@ -158,11 +142,11 @@ function OptionDialog() {
 				password: param.output.password
 			};
 			if(config.type) {
-				serverButtonConfig.set(domain, config);
+				domainConfig.set(domain, config);
 			} else {
-				serverButtonConfig.remove(domain);
+				domainConfig.remove(domain);
 			}
-			serverButtonConfig.save();
+			domainConfig.save();
 			this.configlist.clear();
 			this.configlist.populate();
 		}
@@ -170,8 +154,8 @@ function OptionDialog() {
 
 	this.deleteAction = function() {
 		var domain = document.popupNode.firstChild.getAttribute("label");
-		serverButtonConfig.remove(domain);
-		serverButtonConfig.save();
+		domainConfig.remove(domain);
+		domainConfig.save();
 		this.configlist.clear();
 		this.configlist.populate();
 	};
@@ -190,7 +174,7 @@ function ConfigList() {
 	this.populate = function() {
 		var list = document.getElementById("configlist");
 
-		var config = serverButtonConfig.getAll();
+		var config = domainConfig.getAll();
 		for(var domain in config) {
 			if(!config.hasOwnProperty(domain)) continue;
 			if(!config[domain]) continue;

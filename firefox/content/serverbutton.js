@@ -18,7 +18,7 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Components.utils.import("resource://serverbutton/domain_config.js");
+Components.utils.import("resource://serverbutton/configuration.js");
 
 var ServerButton_urlBarListener = {
 	QueryInterface: function(aIID)
@@ -67,7 +67,7 @@ var ServerButton = {
 
 	updateButtonState: function() {
 		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = serverButtonConfig.get(ServerButton.host);
+		var config = domainConfig.get(ServerButton.host);
 		if(config) {
 			button.removeAttribute("config");
 			button.setAttribute("oncommand", "ServerButton.connect();");
@@ -90,7 +90,7 @@ var ServerButton = {
 	},
 
 	connect: function() {
-		var config = serverButtonConfig.get(ServerButton.host);
+		var config = domainConfig.get(ServerButton.host);
 
 		if(config != null) {
 			var command;
@@ -113,7 +113,7 @@ var ServerButton = {
 	},
 
 	openConfig: function() {
-		var config = serverButtonConfig.get(ServerButton.host);
+		var config = domainConfig.get(ServerButton.host);
 		var param = {input:config,key:ServerButton.host,output:null};
 
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
@@ -125,11 +125,11 @@ var ServerButton = {
 				password: param.output.password
 			};
 			if(config.type) {
-				serverButtonConfig.set(ServerButton.host, config);
+				domainConfig.set(ServerButton.host, config);
 			} else {
-				serverButtonConfig.remove(ServerButton.host);
+				domainConfig.remove(ServerButton.host);
 			}
-			serverButtonConfig.save();
+			domainConfig.save();
 			ServerButton.updateButtonState();
 		}
 	},
