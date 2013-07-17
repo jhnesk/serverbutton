@@ -47,7 +47,7 @@ function ConfigFile(f) {
 	this.load = function() {
 
 		if(!this.file.exists()) {
-			this.file.create(0, 0600);
+			this.write({});
 		}
 		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
 		istream.init(this.file, 0x01, 4, null);
@@ -67,6 +67,9 @@ function ConfigFile(f) {
 
 	this.write = function(jsonObject) {
 		var content = JSON.stringify(jsonObject);
+		if(!this.file.exists()) {
+			this.file.create(0, 0600);
+		}
 		var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
 		stream.write(content, content.length);
 		stream.close();
