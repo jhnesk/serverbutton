@@ -47,7 +47,7 @@ function ConfigFile(f) {
 	this.load = function() {
 
 		if(!this.file.exists()) {
-			this.write({});
+			this.write(this.config);
 		}
 		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
 		istream.init(this.file, 0x01, 4, null);
@@ -137,7 +137,7 @@ domainConfig.load();
 var commandFile = getCommandFile();
 var commandConfig = new ConfigFile(commandFile);
 if(!commandFile.exists()) {
-	commandConfig.write(getDefaultCommandConfig());
+	commandConfig.config = getDefaultCommandConfig();
 }
 commandConfig.load();
 
