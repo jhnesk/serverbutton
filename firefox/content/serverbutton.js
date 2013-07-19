@@ -34,12 +34,12 @@ var ServerButton_urlBarListener = {
 	{
 		if(aURI) {
 			try {
-				ServerButton.setHost(aURI.host);
+				toolbarButton.setHost(aURI.host);
 			} catch(err) {
-				ServerButton.setHost(null);
+				toolbarButton.setHost(null);
 			}
 		} else {
-			ServerButton.setHost(null);
+			toolbarButton.setHost(null);
 		}
 	},
 
@@ -49,34 +49,35 @@ var ServerButton_urlBarListener = {
 	onSecurityChange: function(a, b, c) {}
 };
  
-var ServerButton = {
-	host: null,
+function ToolbarButton() {
 
-	init: function() {
+	this.host = null;
+
+	this.init = function() {
 		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
-	},
+	};
 
-	uninit: function() {
+	this.uninit = function() {
 		gBrowser.removeProgressListener(ServerButton_urlBarListener);
-	},
+	};
 
-	setHost: function(host) {
-		ServerButton.host = host;
-		ServerButton.updateButtonState();
-	},
+	this.setHost = function(host) {
+		this.host = host;
+		this.updateButtonState();
+	};
 
-	updateButtonState: function() {
+	this.updateButtonState = function() {
 		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = domainConfig.get(ServerButton.host);
+		var config = domainConfig.get(toolbarButton.host);
 		if(config) {
 			button.removeAttribute("config");
-			button.setAttribute("oncommand", "ServerButton.connect();");
+			button.setAttribute("oncommand", "toolbarButton.connect();");
 			button.setAttribute("tooltiptext", "Connect to " + config.host);
 			button.disabled=false;
 			document.getElementById("menuitem-connect").disabled=false;
-		} else if(ServerButton.host) {
+		} else if(this.host) {
 			button.setAttribute("config", "true");
-			button.setAttribute("oncommand", "ServerButton.openConfig();");
+			button.setAttribute("oncommand", "toolbarButton.openConfig();");
 			button.setAttribute("tooltiptext", "Configure domain");
 			button.disabled=false;
 			document.getElementById("menuitem-connect").disabled=true;
@@ -87,10 +88,10 @@ var ServerButton = {
 			button.disabled=true;
 			document.getElementById("menuitem-connect").disabled=true;
 		}
-	},
+	};
 
-	connect: function() {
-		var config = domainConfig.get(ServerButton.host);
+	this.connect = function() {
+		var config = domainConfig.get(this.host);
 
 		if(config != null) {
 			var command;
@@ -110,11 +111,11 @@ var ServerButton = {
 				return;
 			}
 		}
-	},
+	};
 
-	openConfig: function() {
-		var config = domainConfig.get(ServerButton.host);
-		var param = {input:config,key:ServerButton.host,output:null};
+	this.openConfig = function() {
+		var config = domainConfig.get(this.host);
+		var param = {input:config,key:this.host,output:null};
 
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
 		if(param.output) {
@@ -125,15 +126,16 @@ var ServerButton = {
 				password: param.output.password
 			};
 			if(config.type) {
-				domainConfig.set(ServerButton.host, config);
+				domainConfig.set(this.host, config);
 			} else {
-				domainConfig.remove(ServerButton.host);
+				domainConfig.remove(this.host);
 			}
 			domainConfig.save();
-			ServerButton.updateButtonState();
+			this.updateButtonState();
 		}
-	},
-};
+	};
+}
 
-window.addEventListener("load", ServerButton.init, false);
-window.addEventListener("unload", ServerButton.uninit, false);
+var toolbarButton = new ToolbarButton();
+window.addEventListener("load", toolbarButton.init, false);
+window.addEventListener("unload", toolbarButton.uninit, false);

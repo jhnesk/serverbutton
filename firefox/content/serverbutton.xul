@@ -11,12 +11,12 @@
 			>
 			<menupopup>
 				<menuitem label="Connect"
-					oncommand="ServerButton.connect();event.stopPropagation();"
+					oncommand="toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
 					/>
 				<menuitem label="Edit current domain"
-					oncommand="ServerButton.openConfig();event.stopPropagation();"
+					oncommand="toolbarButton.openConfig();event.stopPropagation();"
 					id="menuitem-config"
 					/>
 			</menupopup>
@@ -25,7 +25,7 @@
 	<keyset>
 		<key id="serverbutton-shortcut"
 			modifiers="accel alt" key="o"
-			oncommand="ServerButton.connect();"
+			oncommand="toolbarButton.connect();"
 			/>
 	</keyset>
 </overlay>
