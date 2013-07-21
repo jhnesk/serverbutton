@@ -18,57 +18,58 @@
  * along with serverbutton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var ServerButtonConfigurationDialog = {
+Components.utils.import("resource://serverbutton/configuration.js");
 
-	init: function() {
-		var config = window.arguments[0].input;
-		var key = window.arguments[0].key;
+function ServerButtonConfigurationDialog() {
 
-		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-			.getService(Components.interfaces.nsIPrefService);
-		var commands = prefs.getBranch("extensions.serverbutton.command.").getChildList("", {});
+	this.domain = window.arguments[0];
 
-		document.getElementById("title-host").value = key;
+	this.config = domainConfig.get(this.domain);
+
+	this.init = function() {
+		document.getElementById("title-host").value = this.domain;
 
 		var commandList = document.getElementById("serverbutton-configuration-type");
-		var selected;
+		var selected = null;
 
-		for(var i = 0; i < commands.length; i++) {
-			var command = commands[i];
+		var commands = commandConfig.getAll();
+
+		for(var command in commands) {
+			if(!commands.hasOwnProperty(command)) continue;
 			var item = document.createElement("menuitem");
 			item.setAttribute("label", command);
 			item.setAttribute("value", command);
 			item.setAttribute("id", "type-" + command);
 			commandList.firstChild.appendChild(item);
-			if(i == 0) {
+			if(selected == null) {
 				selected = item;
-			} else if(config && command == config.type) {
+			} else if(this.config && command === this.config.type) {
 				selected = item;
 			}
 		}
 
 		commandList.selectedItem = selected;
-		if(config) {
-			document.getElementById("serverbutton-configuration-host").value = config.host;
-			document.getElementById("serverbutton-configuration-user").value = config.user;
-			document.getElementById("serverbutton-configuration-password").value = config.password;
+		if(this.config) {
+			document.getElementById("serverbutton-configuration-host").value = this.config.host;
+			document.getElementById("serverbutton-configuration-user").value = this.config.user;
+			document.getElementById("serverbutton-configuration-password").value = this.config.password;
 		}
-	},
+	};
 
-	save: function() {
+	this.save = function() {
 		var type = document.getElementById("serverbutton-configuration-type").selectedItem.value;
 		var host = document.getElementById("serverbutton-configuration-host").value;
 		var user = document.getElementById("serverbutton-configuration-user").value;
 		var password = document.getElementById("serverbutton-configuration-password").value;
 
-		var config = {type:type,host:host,user:user,password:password};
-		window.arguments[0].output=config;
-	},
+		this.config = {type:type,host:host,user:user,password:password};
+		domainConfig.set(this.domain, this.config);
+		domainConfig.save();
+	};
 
-	remove: function() {
-		var config = {type:null,host:null,user:null,password:null};
-		window.arguments[0].output=config;
+	this.remove = function() {
+		domainConfig.remove(this.domain);
+		domainConfig.save();
 		window.close();
-	},
-};
-
+	};
+}

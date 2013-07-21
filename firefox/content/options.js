@@ -154,26 +154,9 @@ function OptionDialog() {
 
 	this.editAction = function() {
 		var domain = document.popupNode.firstChild.getAttribute("label");
-		var config = domainConfig.get(domain);
-		var param = {input:config,key:domain,output:null};
-
-		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
-		if(param.output) {
-			config = {
-				type: param.output.type,
-				host: param.output.host,
-				user: param.output.user,
-				password: param.output.password
-			};
-			if(config.type) {
-				domainConfig.set(domain, config);
-			} else {
-				domainConfig.remove(domain);
-			}
-			domainConfig.save();
-			this.configlist.clear();
-			this.configlist.populate();
-		}
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
+		this.configlist.clear();
+		this.configlist.populate();
 	};
 
 	this.deleteAction = function() {

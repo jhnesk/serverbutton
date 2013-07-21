@@ -34,12 +34,12 @@ var ServerButton_urlBarListener = {
 	{
 		if(aURI) {
 			try {
-				toolbarButton.setHost(aURI.host);
+				toolbarButton.setDomain(aURI.host);
 			} catch(err) {
-				toolbarButton.setHost(null);
+				toolbarButton.setDomain(null);
 			}
 		} else {
-			toolbarButton.setHost(null);
+			toolbarButton.setDomain(null);
 		}
 	},
 
@@ -48,10 +48,10 @@ var ServerButton_urlBarListener = {
 	onStatusChange: function(a, b, c, d) {},
 	onSecurityChange: function(a, b, c) {}
 };
- 
+
 function ToolbarButton() {
 
-	this.host = null;
+	this.domain = null;
 
 	this.init = function() {
 		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
@@ -61,21 +61,21 @@ function ToolbarButton() {
 		gBrowser.removeProgressListener(ServerButton_urlBarListener);
 	};
 
-	this.setHost = function(host) {
-		this.host = host;
+	this.setDomain = function(domain) {
+		this.domain = domain;
 		this.updateButtonState();
 	};
 
 	this.updateButtonState = function() {
 		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = domainConfig.get(toolbarButton.host);
+		var config = domainConfig.get(this.domain);
 		if(config) {
 			button.removeAttribute("config");
 			button.setAttribute("oncommand", "toolbarButton.connect();");
 			button.setAttribute("tooltiptext", "Connect to " + config.host);
 			button.disabled=false;
 			document.getElementById("menuitem-connect").disabled=false;
-		} else if(this.host) {
+		} else if(this.domain) {
 			button.setAttribute("config", "true");
 			button.setAttribute("oncommand", "toolbarButton.openConfig();");
 			button.setAttribute("tooltiptext", "Configure domain");
@@ -91,7 +91,7 @@ function ToolbarButton() {
 	};
 
 	this.connect = function() {
-		var config = domainConfig.get(this.host);
+		var config = domainConfig.get(this.domain);
 
 		if(config != null) {
 			var command;
@@ -114,28 +114,12 @@ function ToolbarButton() {
 	};
 
 	this.openConfig = function() {
-		var config = domainConfig.get(this.host);
-		var param = {input:config,key:this.host,output:null};
-
-		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", param).focus();
-		if(param.output) {
-			config = {
-				type: param.output.type,
-				host: param.output.host,
-				user: param.output.user,
-				password: param.output.password
-			};
-			if(config.type) {
-				domainConfig.set(this.host, config);
-			} else {
-				domainConfig.remove(this.host);
-			}
-			domainConfig.save();
-			this.updateButtonState();
-		}
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", this.domain).focus();
+		this.updateButtonState();
 	};
 }
 
 var toolbarButton = new ToolbarButton();
+
 window.addEventListener("load", toolbarButton.init, false);
 window.addEventListener("unload", toolbarButton.uninit, false);

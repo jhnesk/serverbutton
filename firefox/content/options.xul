@@ -9,6 +9,7 @@
 	onload="optiondialog.init();"
 	>
 	<script src="options.js"/>
+	<script src="domain_dialog.js"/>
 
 	<tabbox>
 		<tabs>
