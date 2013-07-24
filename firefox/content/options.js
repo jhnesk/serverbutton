@@ -77,11 +77,12 @@ function OptionDialog() {
 	};
 
 	this.addType = function() {
-		var param = {type:null};
-		window.openDialog("chrome://serverbutton/content/typeinput.xul", "typeinput-dialog", "chrome,dialog,centerscreen,modal", param).focus();
-		if(param.type) {
-			commandConfig.set(param.type, "");
-			this.addCommand(param.type);
+		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+		var input = {value:""};
+		var result = promptService.prompt(null, "New type", "Key:", input, null, {});
+		if(result && input.value) {
+			commandConfig.set(input.value, "");
+			this.addCommand(input.value);
 		}
 	};
 
