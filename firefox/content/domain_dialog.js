@@ -72,4 +72,14 @@ function ServerButtonConfigurationDialog() {
 		domainConfig.save();
 		window.close();
 	};
+
+	this.togglePassword = function() {
+		var showPassword = document.getElementById("show-password").checked;
+		var textbox = document.getElementById("serverbutton-configuration-password");
+		if(showPassword) {
+			textbox.removeAttribute("type");
+		} else {
+			textbox.setAttribute("type", "password");
+		}
+	};
 }

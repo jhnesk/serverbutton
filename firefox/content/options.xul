@@ -6,7 +6,7 @@
 	ondialogcancel="return optiondialog.cancel();"
 	ondialogaccept="return optiondialog.save();"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="optiondialog.init();"
+	onload="optiondialog=new OptionDialog();optiondialog.init();"
 	>
 	<script src="options.js"/>
 	<script src="domain_dialog.js"/>
@@ -43,8 +43,10 @@
 							<listheader label="Type"/>
 							<listheader label="Host"/>
 							<listheader label="User"/>
+							<listheader label="Password"/>
 						</listhead>
 						<listcols>
+							<listcol flex="1"/>
 							<listcol flex="1"/>
 							<listcol flex="1"/>
 							<listcol flex="1"/>
@@ -54,6 +56,10 @@
 					<hbox>
 						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
 						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
+						<commandset>
+							<command id="toggle-password" oncommand="return optiondialog.togglePassword();"/>
+						</commandset>
+						<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
 					</hbox>
 				</vbox>
 			</tabpanel>

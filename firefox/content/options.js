@@ -167,6 +167,11 @@ function OptionDialog() {
 		this.configlist.clear();
 		this.configlist.populate();
 	};
+
+	this.togglePassword = function() {
+		this.configlist.clear();
+		this.configlist.populate();
+	};
 }
 
 function ConfigList() {
@@ -182,6 +187,8 @@ function ConfigList() {
 	this.populate = function() {
 		var list = document.getElementById("configlist");
 
+		var showPassword = document.getElementById("show-password").checked;
+
 		var config = domainConfig.getAll();
 		for(var domain in config) {
 			if(!config.hasOwnProperty(domain)) continue;
@@ -193,6 +200,11 @@ function ConfigList() {
 			this.addCell(row, config[domain].type);
 			this.addCell(row, config[domain].host);
 			this.addCell(row, config[domain].user);
+			if(showPassword) {
+				this.addCell(row, config[domain].password);
+			} else {
+				this.addCell(row, "********");
+			}
 
 			list.appendChild(row);
 		}
@@ -204,5 +216,3 @@ function ConfigList() {
 		row.appendChild(cell);
 	};
 }
-
-var optiondialog = new OptionDialog();
