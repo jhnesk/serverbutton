@@ -152,29 +152,37 @@ function OptionDialog() {
 			return filePicker.file;
 		}
 	};
+}
+
+function ConfigList() {
 
 	this.editAction = function() {
 		var domain = document.popupNode.firstChild.getAttribute("label");
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
-		this.configlist.clear();
-		this.configlist.populate();
+		this.clear();
+		this.populate();
 	};
 
 	this.deleteAction = function() {
 		var domain = document.popupNode.firstChild.getAttribute("label");
 		domainConfig.remove(domain);
 		domainConfig.save();
-		this.configlist.clear();
-		this.configlist.populate();
+		this.clear();
+		this.populate();
 	};
 
 	this.togglePassword = function() {
-		this.configlist.clear();
-		this.configlist.populate();
+		this.clear();
+		this.populate();
 	};
-}
 
-function ConfigList() {
+	this.dblclickAction = function(event) {
+		var item = document.getElementById("configlist").selectedItem;
+		var domain = item.firstChild.getAttribute("label");
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
+		this.clear();
+		this.populate();
+	}
 
 	this.clear = function() {
 		var list = document.getElementById("configlist");

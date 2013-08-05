@@ -31,13 +31,13 @@
 				<vbox flex="1">
 					<menupopup id="domainconfigmenu">
 						<menuitem label="Edit"
-							oncommand="optiondialog.editAction();"
+							oncommand="optiondialog.configlist.editAction();"
 							/>
 						<menuitem label="Delete"
-							oncommand="optiondialog.deleteAction();"
+							oncommand="optiondialog.configlist.deleteAction();"
 							/>
 					</menupopup>
-					<listbox id="configlist" flex="1" context="domainconfigmenu">
+					<listbox id="configlist" flex="1" context="domainconfigmenu" ondblclick="optiondialog.configlist.dblclickAction();">
 						<listhead flex="1">
 							<listheader label="Domain"/>
 							<listheader label="Type"/>
@@ -57,7 +57,7 @@
 						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
 						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
 						<commandset>
-							<command id="toggle-password" oncommand="return optiondialog.togglePassword();"/>
+							<command id="toggle-password" oncommand="return optiondialog.configlist.togglePassword();"/>
 						</commandset>
 						<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
 					</hbox>
