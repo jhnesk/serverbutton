@@ -157,14 +157,22 @@ function OptionDialog() {
 function ConfigList() {
 
 	this.editAction = function() {
-		var domain = document.popupNode.firstChild.getAttribute("label");
+		var item = document.getElementById("configlist").selectedItem;
+		if(item === null) {
+			return;
+		}
+		var domain = item.firstChild.getAttribute("label");
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
 		this.clear();
 		this.populate();
 	};
 
 	this.deleteAction = function() {
-		var domain = document.popupNode.firstChild.getAttribute("label");
+		var item = document.getElementById("configlist").selectedItem;
+		if(item === null) {
+			return;
+		}
+		var domain = item.firstChild.getAttribute("label");
 		domainConfig.remove(domain);
 		domainConfig.save();
 		this.clear();
@@ -175,14 +183,6 @@ function ConfigList() {
 		this.clear();
 		this.populate();
 	};
-
-	this.dblclickAction = function(event) {
-		var item = document.getElementById("configlist").selectedItem;
-		var domain = item.firstChild.getAttribute("label");
-		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
-		this.clear();
-		this.populate();
-	}
 
 	this.clear = function() {
 		var list = document.getElementById("configlist");

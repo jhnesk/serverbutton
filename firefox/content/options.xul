@@ -31,13 +31,14 @@
 				<vbox flex="1">
 					<menupopup id="domainconfigmenu">
 						<menuitem label="Edit"
-							oncommand="optiondialog.configlist.editAction();"
+							command="edit-item"
 							/>
 						<menuitem label="Delete"
-							oncommand="optiondialog.configlist.deleteAction();"
+							command="delete-item"
+							key="delete-key"
 							/>
 					</menupopup>
-					<listbox id="configlist" flex="1" context="domainconfigmenu" ondblclick="optiondialog.configlist.dblclickAction();">
+					<listbox id="configlist" flex="1" context="domainconfigmenu" ondblclick="optiondialog.configlist.editAction();">
 						<listhead flex="1">
 							<listheader label="Domain"/>
 							<listheader label="Type"/>
@@ -56,13 +57,18 @@
 					<hbox>
 						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
 						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
-						<commandset>
-							<command id="toggle-password" oncommand="return optiondialog.configlist.togglePassword();"/>
-						</commandset>
 						<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
 					</hbox>
 				</vbox>
 			</tabpanel>
 		</tabpanels>
 	</tabbox>
+	<commandset>
+		<command id="toggle-password" oncommand="return optiondialog.configlist.togglePassword();"/>
+		<command id="delete-item" oncommand="return optiondialog.configlist.deleteAction();"/>
+		<command id="edit-item" oncommand="return optiondialog.configlist.editAction();"/>
+	</commandset>
+	<keyset>
+		<key id="delete-key" command="delete-item" keycode="VK_DELETE"/>
+	</keyset>
 </dialog>
