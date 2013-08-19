@@ -4,18 +4,21 @@
 	<toolbarpalette id="BrowserToolbarPalette">
 		<script src="serverbutton.js"/>
 		<script src="command.js"/>
-		<toolbarbutton id="serverbutton-toolbarbutton"
-			label="Server button"
+		<toolbarbutton
+			id="serverbutton-toolbarbutton"
+			label="ServerButton"
 			class="toolbarbutton-1 chromeclass-toolbar-additional"
 			type="menu-button"
 			>
 			<menupopup>
-				<menuitem label="Connect"
+				<menuitem
+					label="Connect"
 					oncommand="toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
 					/>
-				<menuitem label="Edit current domain"
+				<menuitem
+					label="Edit current domain"
 					oncommand="toolbarButton.openConfig();event.stopPropagation();"
 					id="menuitem-config"
 					/>
@@ -23,7 +26,8 @@
 		</toolbarbutton>
 	</toolbarpalette>
 	<keyset>
-		<key id="serverbutton-shortcut"
+		<key
+			id="serverbutton-shortcut"
 			modifiers="accel alt" key="o"
 			oncommand="toolbarButton.connect();"
 			/>
