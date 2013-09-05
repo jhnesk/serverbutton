@@ -2,8 +2,8 @@ ServerButton
 ============
 
 This is a simple firefox extension to launch a command depending on the
-domain loaded in the current tab. It's intended purpose is to login to
-the webserver. That can be really useful when you need quick access to
+domain loaded in the current tab. The intended purpose is to login to
+the webserver, which can be really useful when you need quick access to
 many different servers.
 
 Security:
