@@ -13,8 +13,6 @@
 		<em:description>Connect to remote servers, configured by current domain.</em:description>
 		<em:creator>Johan Ask</em:creator>
 		<em:homepageURL>https://github.com/jhnesk/serverbutton/</em:homepageURL>
-		<em:iconURL>chrome://serverbutton/skin/servericon.png</em:iconURL>
-		<em:icon64URL>chrome://serverbutton/skin/servericon.png</em:icon64URL>
 
 		<!-- Firefox -->
 		<em:targetApplication>

@@ -43,3 +43,5 @@ License:
 
 Copyright 2013 Johan Ask.
 E-mail: jhnesk@gmail.com
+
+The icons come from <http://tango.freedesktop.org> and are released to the Public Domain.

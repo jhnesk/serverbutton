@@ -1,6 +1,8 @@
 content	serverbutton	content/
-overlay chrome://browser/content/browser.xul chrome://serverbutton/content/serverbutton.xul
+overlay	chrome://browser/content/browser.xul chrome://serverbutton/content/serverbutton.xul
 resource	serverbutton	modules/
 
-skin serverbutton classic/1.0 skin/
-style chrome://serverbutton/content/serverbutton.xul chrome://serverbutton/skin/button.css
+skin	serverbutton classic/1.0 skin/
+style	chrome://global/content/customizeToolbar.xul chrome://serverbutton/skin/button.css
+
+
