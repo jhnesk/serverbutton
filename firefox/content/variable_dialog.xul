@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<dialog id="serverbutton-variable-dialog"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	onload="serverButtonVariableDialog=new VariableDialog();serverButtonVariableDialog.init();"
+	title="Edit variable"
+	buttons="accept,cancel"
+	ondialogaccept="return serverButtonVariableDialog.save();"
+	>
+	<script src="variable_dialog.js"/>
+	<groupbox>
+		<caption id="title-variable"/>
+		<label control="serverbutton-variable-label"
+			value="Label:"/>
+		<textbox id="serverbutton-variable-label"/>
+		<label control="serverbutton-variable-type"
+			value="Type:"/>
+		<menulist id="serverbutton-variable-type">
+			<menupopup>
+				<menuitem label="string"/>
+				<menuitem label="password"/>
+				<menuitem label="integer"/>
+			</menupopup>
+		</menulist>
+		<label control="serverbutton-variable-default"
+			value="Default:"/>
+		<textbox id="serverbutton-variable-default"/>
+	</groupbox>
+</dialog>

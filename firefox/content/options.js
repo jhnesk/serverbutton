@@ -67,6 +67,26 @@ function OptionDialog() {
 		}
 	};
 
+	this.openVariableConfig = function() {
+		var item = document.getElementById("variableslist").selectedItem;
+		var variable = item.firstChild.getAttribute("label");
+		var labelCell = item.childNodes[1];
+		var typeCell = item.childNodes[2];
+		var defaultValueCell = item.childNodes[3];
+
+		var data = {
+			name: variable,
+			label: labelCell.getAttribute("label"),
+			type: typeCell.getAttribute("label"),
+			defaultValue: defaultValueCell.getAttribute("label")
+		};
+		window.openDialog("chrome://serverbutton/content/variable_dialog.xul", "serverbutton-variable-dialog", "chrome,dialog,centerscreen,modal", data).focus();
+
+		labelCell.setAttribute("label", data.label);
+		typeCell.setAttribute("label", data.type);
+		defaultValueCell.setAttribute("label", data.defaultValue);
+	};
+
 	this.addVariable = function(variable) {
 		var type = this.getSelectedType();
 		var command = commandConfig.get(type);
@@ -134,7 +154,30 @@ function OptionDialog() {
 		command.command = commandNode.value;
 		var argumentsNode = document.getElementById("config-arguments");
 		command.args = argumentsNode.value;
+		command.variables = this.getCurrentVariables();
 		commandConfig.set(type, command);
+	};
+
+	this.getCurrentVariables = function() {
+
+		var result = {};
+
+		var list = document.getElementById("variableslist");
+		var items = list.getElementsByTagName("listitem");
+		for(var i = items.length-1; i >= 0; i--) {
+			var item = items[i];
+			var variable = item.firstChild.getAttribute("label");
+			var labelCell = item.childNodes[1];
+			var typeCell = item.childNodes[2];
+			var defaultValueCell = item.childNodes[3];
+
+			result[variable] = {
+				"label": labelCell.getAttribute("label"),
+				"type": typeCell.getAttribute("label"),
+				"defaultValue": defaultValueCell.getAttribute("label")
+			};
+		}
+		return result;
 	};
 
 	this.resetCommand = function() {

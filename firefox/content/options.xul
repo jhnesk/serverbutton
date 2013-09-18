@@ -39,7 +39,9 @@
 
 						<groupbox>
 							<caption label="Variables"/>
-							<listbox id="variableslist" rows="4">
+							<listbox id="variableslist" rows="4"
+								ondblclick="optiondialog.openVariableConfig();"
+								>
 								<listhead flex="1">
 									<listheader label="Name"/>
 									<listheader label="Label"/>
