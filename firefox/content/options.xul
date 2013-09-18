@@ -36,6 +36,24 @@
 						<textbox id="config-command" style="min-width: 30em;"/>
 						<label value="Arguments:"/>
 						<textbox id="config-arguments" style="min-width: 30em;"/>
+
+						<groupbox>
+							<caption label="Variables"/>
+							<listbox id="variableslist" rows="4">
+								<listhead flex="1">
+									<listheader label="Name"/>
+									<listheader label="Label"/>
+									<listheader label="Type"/>
+									<listheader label="Default"/>
+								</listhead>
+								<listcols>
+									<listcol flex="1"/>
+									<listcol flex="1"/>
+									<listcol flex="1"/>
+									<listcol flex="1"/>
+								</listcols>
+							</listbox>
+						</groupbox>
 						<hbox>
 							<spacer flex="1"/>
 							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>

@@ -35,8 +35,6 @@ function OptionDialog() {
 		// TODO: handle empty list
 		commandlist.selectedIndex = 0;
 
-		this.fillCommandConfigFields();
-
 		this.configlist.populate();
 	};
 
@@ -53,6 +51,34 @@ function OptionDialog() {
 		commandNode.value = command.command;
 		var argumentsNode = document.getElementById("config-arguments");
 		argumentsNode.value = command.args;
+
+		this.clearVarialbes();
+		for(var variable in command.variables) {
+			if(!command.variables.hasOwnProperty(variable)) continue;
+			this.addVariable(variable);
+		}
+	};
+
+	this.clearVarialbes = function() {
+		var list = document.getElementById("variableslist");
+		var items = list.getElementsByTagName("listitem");
+		for(var i = items.length-1; i >= 0; i--) {
+			list.removeChild(items[i]);
+		}
+	};
+
+	this.addVariable = function(variable) {
+		var type = this.getSelectedType();
+		var command = commandConfig.get(type);
+		var variableObject = command.variables[variable];
+
+		var list = document.getElementById("variableslist");
+		var row = document.createElement("listitem");
+		this.addCell(row, variable);
+		this.addCell(row, variableObject.label);
+		this.addCell(row, variableObject.type);
+		this.addCell(row, variableObject.defaultValue);
+		list.appendChild(row);
 	};
 
 	this.addCommand = function(type) {
@@ -174,6 +200,12 @@ function OptionDialog() {
 		if(res != nsIFilePicker.returnCancel) {
 			return filePicker.file;
 		}
+	};
+
+	this.addCell = function(row, label) {
+		var cell = document.createElement("listcell");
+		cell.setAttribute("label", label);
+		row.appendChild(cell);
 	};
 }
 
