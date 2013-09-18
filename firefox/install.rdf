@@ -5,7 +5,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>serverbutton@jhnesk.se</em:id>
 		<em:name>ServerButton</em:name>
-		<em:version>0.4.0</em:version>
+		<em:version>0.5.0</em:version>
 		<em:type>2</em:type>
 
 		<em:optionsURL>chrome://serverbutton/content/options.xul</em:optionsURL>
@@ -14,9 +14,9 @@
 		<em:creator>Johan Ask</em:creator>
 		<em:homepageURL>https://github.com/jhnesk/serverbutton/</em:homepageURL>
 
-		<!-- Firefox -->
 		<em:targetApplication>
 			<Description>
+				<!-- Firefox -->
 				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
 				<em:minVersion>3.6</em:minVersion>
 				<em:maxVersion>4.0.*</em:maxVersion>

@@ -31,6 +31,7 @@ function ServerButtonConfigurationDialog() {
 
 		var commandList = document.getElementById("serverbutton-configuration-type");
 		var selected = null;
+		var selectedCommand = null;
 
 		var commands = commandConfig.getAll();
 
@@ -43,26 +44,95 @@ function ServerButtonConfigurationDialog() {
 			commandList.firstChild.appendChild(item);
 			if(selected == null) {
 				selected = item;
+				selectedCommand = command;
 			} else if(this.config && command === this.config.type) {
 				selected = item;
+				selectedCommand = command;
 			}
 		}
-
 		commandList.selectedItem = selected;
-		if(this.config) {
-			document.getElementById("serverbutton-configuration-host").value = this.config.host;
-			document.getElementById("serverbutton-configuration-user").value = this.config.user;
-			document.getElementById("serverbutton-configuration-password").value = this.config.password;
+
+		this.updateArgumentInput(commands[selectedCommand]);
+	};
+
+	this.commandChange = function() {
+		var commandList = document.getElementById("serverbutton-configuration-type");
+		var commands = commandConfig.getAll();
+		this.updateArgumentInput(commands[commandList.selectedItem.value]);
+	};
+
+	this.removeAllChildren = function(node) {
+		while(node.firstChild) {
+			node.removeChild(node.firstChild);
+		}
+	};
+
+	this.updateArgumentInput = function(command) {
+		var argumentBox = document.getElementById("arguments");
+		this.removeAllChildren(argumentBox);
+
+		for(var variable in command.variables) {
+			if(!command.variables.hasOwnProperty(variable)) continue;
+			var variableObject = command.variables[variable];
+
+			var label = document.createElement("label");
+			label.setAttribute("value", variableObject.label + ":");
+			label.setAttribute("control", "serverbutton-config-variable-" + variable);
+			var inputElement;
+			switch(variableObject.type) {
+				case "string":
+					inputElement = document.createElement("textbox");
+					inputElement.setAttribute("id", "serverbutton-config-variable-" + variable);
+					break;
+				case "password":
+					inputElement = document.createElement("textbox");
+					inputElement.setAttribute("id", "serverbutton-config-variable-" + variable);
+					inputElement.setAttribute("type", "password");
+					break;
+				case "integer":
+					inputElement = document.createElement("textbox");
+					inputElement.setAttribute("id", "serverbutton-config-variable-" + variable);
+					inputElement.setAttribute("type", "number");
+					break;
+			}
+			argumentBox.appendChild(label);
+			argumentBox.appendChild(inputElement);
+		}
+
+		this.fillArgumentInput(command);
+	};
+
+	this.fillArgumentInput = function(command) {
+		for(var variable in command.variables) {
+			if(!command.variables.hasOwnProperty(variable)) continue;
+			var element = document.getElementById("serverbutton-config-variable-" + variable);
+
+			if(this.config) {
+				var value = this.config[variable];
+				if(value) {
+					element.value = value;
+				}
+			} else {
+				var defaultValue = command.variables[variable].defaultValue;
+				if(defaultValue) {
+					element.value = defaultValue;
+				}
+			}
 		}
 	};
 
 	this.save = function() {
 		var type = document.getElementById("serverbutton-configuration-type").selectedItem.value;
-		var host = document.getElementById("serverbutton-configuration-host").value;
-		var user = document.getElementById("serverbutton-configuration-user").value;
-		var password = document.getElementById("serverbutton-configuration-password").value;
+		var command = commandConfig.get(type);
 
-		this.config = {type:type,host:host,user:user,password:password};
+		this.config = {type:type};
+
+		for(var variable in command.variables) {
+			if(!command.variables.hasOwnProperty(variable)) continue;
+				var value = document.getElementById("serverbutton-config-variable-" + variable).value;
+				this.config[variable] = value;
+		}
+
 		domainConfig.set(this.domain, this.config);
 		domainConfig.save();
 	};

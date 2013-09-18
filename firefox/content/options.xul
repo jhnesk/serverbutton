@@ -18,14 +18,31 @@
 		</tabs>
 		<tabpanels>
 			<tabpanel id="commandtab">
-				<vbox flex="1">
-					<groupbox id="commands" flex="1">
-						<caption label="Edit commands"/>
+				<hbox>
+					<vbox>
+						<listbox id="commandlist" onselect="optiondialog.fillCommandConfigFields();">
+							<listcols>
+								<listcol/>
+							</listcols>
+						</listbox>
+						<hbox>
+							<button label="Add" icon="add" onclick="optiondialog.addType();"/>
+							<button label="Remove" icon="remove" onclick="optiondialog.removeCommand(optiondialog.getSelectedType());"/>
+						</hbox>
+					</vbox>
+					<groupbox id="commandconfig">
+						<caption label="Configure command"/>
+						<label value="Command:"/>
+						<textbox id="config-command" style="min-width: 30em;"/>
+						<label value="Arguments:"/>
+						<textbox id="config-arguments" style="min-width: 30em;"/>
+						<hbox>
+							<spacer flex="1"/>
+							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
+							<button label="Apply" icon="apply" onclick="optiondialog.applyCommand();"/>
+						</hbox>
 					</groupbox>
-					<hbox>
-						<button label="Add command" icon="add" onclick="optiondialog.addType();"/>
-					</hbox>
-				</vbox>
+				</hbox>
 			</tabpanel>
 			<tabpanel id="domaintab">
 				<vbox flex="1">
@@ -42,14 +59,8 @@
 						<listhead flex="1">
 							<listheader label="Domain"/>
 							<listheader label="Type"/>
-							<listheader label="Host"/>
-							<listheader label="User"/>
-							<listheader label="Password"/>
 						</listhead>
 						<listcols>
-							<listcol flex="1"/>
-							<listcol flex="1"/>
-							<listcol flex="1"/>
 							<listcol flex="1"/>
 							<listcol flex="1"/>
 						</listcols>
@@ -57,7 +68,6 @@
 					<hbox>
 						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
 						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
-						<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
 					</hbox>
 				</vbox>
 			</tabpanel>

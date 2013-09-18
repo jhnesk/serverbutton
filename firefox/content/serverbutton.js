@@ -96,14 +96,11 @@ function ToolbarButton() {
 		if(config != null) {
 			var command;
 			try {
-				command = new Command(config.type);
+				command = new Command(config);
 			} catch(e) {
 				alert("Error: No command found for the selected type '" + config.type + "'.");
 				return;
 			}
-			command.setHost(config.host);
-			command.setUser(config.user);
-			command.setPassword(config.password);
 			try {
 				command.run();
 			} catch(e) {

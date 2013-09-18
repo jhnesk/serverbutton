@@ -30,49 +30,64 @@ function OptionDialog() {
 			if(!commands.hasOwnProperty(command)) continue;
 			this.addCommand(command);
 		}
+		var commandlist = document.getElementById("commandlist");
+
+		// TODO: handle empty list
+		commandlist.selectedIndex = 0;
+
+		this.fillCommandConfigFields();
 
 		this.configlist.populate();
 	};
 
+	this.getSelectedType = function() {
+		var commandlist = document.getElementById("commandlist");
+		var item = commandlist.selectedItem;
+		return item.firstChild.getAttribute("label");
+	};
+
+	this.fillCommandConfigFields = function() {
+		var type = this.getSelectedType();
+		var command = commandConfig.get(type);
+		var commandNode = document.getElementById("config-command");
+		commandNode.value = command.command;
+		var argumentsNode = document.getElementById("config-arguments");
+		argumentsNode.value = command.args;
+	};
+
 	this.addCommand = function(type) {
 
-		var dialog = document.getElementById("commands");
-		var id = "command-" + type;
-
-		var label = document.createElement("label");
-		label.setAttribute("control", id);
-		label.setAttribute("value", type + ":");
-
-		var hbox = document.createElement("hbox");
-
-		var textbox = document.createElement("textbox");
-		textbox.setAttribute("id", id);
-		var value = commandConfig.get(type) || "";
-		textbox.setAttribute("value", value);
-		textbox.setAttribute("flex", "1");
-		textbox.setAttribute("style", "min-width: 30em;");
-
-		var removeButton = document.createElement("button");
-		removeButton.setAttribute("icon", "remove");
-		removeButton.setAttribute("label", "Remove");
-		removeButton.setAttribute("onclick", "optiondialog.removeCommand('" + type  + "');");
-
-		hbox.appendChild(textbox);
-		hbox.appendChild(removeButton);
-
-		var vbox = document.createElement("vbox");
-		vbox.setAttribute("id", "command-wrapper-" + type);
-		vbox.appendChild(label);
-		vbox.appendChild(hbox);
-		dialog.appendChild(vbox);
+		var commandlist = document.getElementById("commandlist");
+		var row = document.createElement("listitem");
+		var cell = document.createElement("listcell");
+		cell.setAttribute("label", type);
+		row.appendChild(cell);
+		commandlist.appendChild(row);
 	};
 
 	this.removeCommand = function(type) {
 		var promtService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
 		if(promtService.confirm(window, "Remove command", "Are you sure you wan't to remove this command?")) {
 			commandConfig.remove(type);
-			var commandElement = document.getElementById("command-wrapper-" + type);
-			commandElement.parentNode.removeChild(commandElement);
+			this.removeFromList(type);
+		}
+	};
+
+	this.removeFromList = function(type) {
+		var commandlist = document.getElementById("commandlist");
+		var children = commandlist.childNodes;
+		var length = children.length;
+		for(var i = 0; i < length; i++) {
+			var cell = children[i].firstChild;
+			if(cell.getAttribute("label") === type) {
+				commandlist.removeChild(children[i]);
+				if(i === length-1) {
+					commandlist.selectedIndex = i-2;
+				} else {
+					commandlist.selectedIndex = i-1;
+				}
+				break;
+			}
 		}
 	};
 
@@ -81,19 +96,27 @@ function OptionDialog() {
 		var input = {value:""};
 		var result = promptService.prompt(null, "New type", "Key:", input, null, {});
 		if(result && input.value) {
-			commandConfig.set(input.value, "");
+			commandConfig.set(input.value, {});
 			this.addCommand(input.value);
 		}
 	};
 
-	this.save = function() {
-		var commands = commandConfig.getAll();
-		for(var type in commands) {
-			if(!commands.hasOwnProperty(type)) continue;
+	this.applyCommand = function() {
+		var type = this.getSelectedType();
+		var command = commandConfig.get(type);
+		var commandNode = document.getElementById("config-command");
+		command.command = commandNode.value;
+		var argumentsNode = document.getElementById("config-arguments");
+		command.args = argumentsNode.value;
+		commandConfig.set(type, command);
+	};
 
-			var command = document.getElementById("command-" + type).value;
-			commandConfig.set(type, command);
-		}
+	this.resetCommand = function() {
+		this.fillCommandConfigFields();
+	};
+
+	this.save = function() {
+		this.applyCommand();
 		commandConfig.save();
 	};
 
@@ -179,11 +202,6 @@ function ConfigList() {
 		this.populate();
 	};
 
-	this.togglePassword = function() {
-		this.clear();
-		this.populate();
-	};
-
 	this.clear = function() {
 		var list = document.getElementById("configlist");
 		var items = list.getElementsByTagName("listitem");
@@ -195,24 +213,14 @@ function ConfigList() {
 	this.populate = function() {
 		var list = document.getElementById("configlist");
 
-		var showPassword = document.getElementById("show-password").checked;
-
 		var config = domainConfig.getAll();
 		for(var domain in config) {
 			if(!config.hasOwnProperty(domain)) continue;
 			if(!config[domain]) continue;
 
 			var row = document.createElement("listitem");
-
 			this.addCell(row, domain);
 			this.addCell(row, config[domain].type);
-			this.addCell(row, config[domain].host);
-			this.addCell(row, config[domain].user);
-			if(showPassword) {
-				this.addCell(row, config[domain].password);
-			} else {
-				this.addCell(row, "********");
-			}
 
 			list.appendChild(row);
 		}

@@ -6,25 +6,6 @@ domain loaded in the current tab. The intended purpose is to login to
 the webserver, which can be really useful when you need quick access to
 many different servers.
 
-Security:
----------
-
-Since this extension runs external commands there are a few security
-concerns. Other extensions or plugins could potentially change the
-preferences to run malicious code as the current user. This shouldn't
-be an issue, since a malicious extension could do this anyway, but if
-there are a bug in firefox or any extension which allows an attacker to
-change preferences, this might become a problem.
-
-Another issue is that ServerButton saves your passwords in plain text
-in a file in the firefox profile directory. I plan to add some kind of
-encryption option to solve this.
-
-Known issues:
--------------
-
-- Can't run executables with whitespaces in their path or filename.
-
 License:
 --------
 

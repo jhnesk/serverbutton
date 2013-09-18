@@ -13,21 +13,18 @@
 	<label id="title-host" class="header"/>
 	<label control="serverbutton-configuration-type"
 		value="Type"/>
-	<menulist id="serverbutton-configuration-type">
+	<menulist id="serverbutton-configuration-type"
+		oncommand="return serverButtonDomainDialog.commandChange();"
+		>
 		<menupopup>
 		</menupopup>
 	</menulist>
-	<label control="serverbutton-configuration-host"
-		value="Host"/>
-	<textbox id="serverbutton-configuration-host" />
-	<label control="serverbutton-configuration-user"
-		value="Username"/>
-	<textbox id="serverbutton-configuration-user" />
-	<label control="serverbutton-configuration-password"
-		value="Password"/>
-	<textbox id="serverbutton-configuration-password" type="password"/>
+	<vbox id="arguments">
+	</vbox>
+	<!--
 	<commandset>
 		<command id="toggle-password" oncommand="return serverButtonDomainDialog.togglePassword();"/>
 	</commandset>
 	<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
+	-->
 </dialog>

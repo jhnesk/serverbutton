@@ -97,10 +97,90 @@ function getCommandFile() {
 function getDefaultCommandConfig() {
 
 	var linuxCommands = {
-		"ssh": "/usr/bin/urxvt -e ssh $USER@$HOST",
-		"ftp": "/usr/bin/gftp ftp://$USER:$PASSWORD@$HOST",
-		"rdesktop": "/usr/bin/rdesktop -u $USER -p $PASSWORD -g 1280x960 $HOST",
-		"vmware": "/usr/bin/vmware-view --serverURL=$HOST --userName=$USER --password=$PASSWORD -q"
+		ssh: {
+			command: "/usr/bin/urxvt",
+			variables: {
+				"user": {
+					label: "User",
+					type: "string",
+					defaultValue: ""
+				},
+				"host": {
+					label: "Host",
+					type: "string",
+					defaultValue: ""
+				},
+				"port": {
+					label: "Port",
+					type: "integer",
+					defaultValue: 22
+				}
+			},
+			args: "-e ssh ${user}@${host} -p ${port}"
+		},
+		ftp: {
+			command: "/usr/bin/gftp",
+			variables: {
+				"user": {
+					label: "User",
+					type: "string",
+					defaultValue: ""
+				},
+				"host": {
+					label: "Host",
+					type: "string",
+					defaultValue: ""
+				},
+				"password": {
+					label: "Password",
+					type: "password",
+					defaultValue: ""
+				}
+			},
+			args: "ftp://${user}:${password}@${host}"
+		},
+		rdesktop: {
+			command: "/usr/bin/rdesktop",
+			variables: {
+				"user": {
+					label: "User",
+					type: "string",
+					defaultValue: ""
+				},
+				"host": {
+					label: "Host",
+					type: "string",
+					defaultValue: ""
+				},
+				"password": {
+					label: "Password",
+					type: "password",
+					defaultValue: ""
+				}
+			},
+			args: "-u ${user} -p ${password} -g 1280x960 ${host}"
+		},
+		vmware: {
+			command: "/usr/bin/vmware-view",
+			variables: {
+				"user": {
+					label: "User",
+					type: "string",
+					defaultValue: ""
+				},
+				"host": {
+					label: "Host",
+					type: "string",
+					defaultValue: ""
+				},
+				"password": {
+					label: "Password",
+					type: "password",
+					defaultValue: ""
+				}
+			},
+			args: "--serverURL=${host} --userName=${user} --password=${password} -q"
+		}
 	};
 
 	var macCommands = {
@@ -129,7 +209,6 @@ function getDefaultCommandConfig() {
 			return linuxCommands;
 	}
 }
-
 
 var domainConfig = new ConfigFile(getDomainFile());
 domainConfig.load();

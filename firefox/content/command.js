@@ -18,25 +18,26 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function Command(type) {
+function Command(config) {
 
-	this.command = commandConfig.get(type);
+	this.config = config;
 
-	this.setHost = function(host) {
-		this.command = this.command.replace("$HOST", host);
-	};
-
-	this.setUser = function(user) {
-		this.command = this.command.replace("$USER", user);
-	};
-
-	this.setPassword = function(password) {
-		this.command = this.command.replace("$PASSWORD", password);
-	};
+	this.command = commandConfig.get(config.type);
 
 	this.run = function() {
-		var args = this.command.split(" ");
-		var filename = args.shift();
+		var filename = this.command.command;
+		var args = this.parseArguments(this.command.args);
+
+		for(variable in this.command.variables) {
+			if(!this.command.variables.hasOwnProperty(variable)) continue;
+
+			for(var i = 0; i < args.length; i++) {
+				var value = this.config[variable];
+				if(value) {
+					args[i] = args[i].replace("${" + variable + "}", value);
+				}
+			}
+		}
 
 		var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 		file.initWithPath(filename);
@@ -45,4 +46,8 @@ function Command(type) {
 		process.init(file);
 		process.run(false, args, args.length);
 	};
+
+	this.parseArguments = function(arg) {
+		return arg.split(" ");
+	}
 }
