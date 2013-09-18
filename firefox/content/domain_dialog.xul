@@ -21,10 +21,8 @@
 	</menulist>
 	<vbox id="arguments">
 	</vbox>
-	<!--
 	<commandset>
 		<command id="toggle-password" oncommand="return serverButtonDomainDialog.togglePassword();"/>
 	</commandset>
 	<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
-	-->
 </dialog>

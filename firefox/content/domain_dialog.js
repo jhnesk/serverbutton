@@ -71,6 +71,8 @@ function ServerButtonConfigurationDialog() {
 		var argumentBox = document.getElementById("arguments");
 		this.removeAllChildren(argumentBox);
 
+		var hasPassword = false;
+
 		for(var variable in command.variables) {
 			if(!command.variables.hasOwnProperty(variable)) continue;
 			var variableObject = command.variables[variable];
@@ -88,6 +90,8 @@ function ServerButtonConfigurationDialog() {
 					inputElement = document.createElement("textbox");
 					inputElement.setAttribute("id", "serverbutton-config-variable-" + variable);
 					inputElement.setAttribute("type", "password");
+					inputElement.setAttribute("password", "true");
+					hasPassword = true;
 					break;
 				case "integer":
 					inputElement = document.createElement("textbox");
@@ -97,6 +101,13 @@ function ServerButtonConfigurationDialog() {
 			}
 			argumentBox.appendChild(label);
 			argumentBox.appendChild(inputElement);
+		}
+
+		var passwordCheckbox = document.getElementById("show-password");
+		if(hasPassword) {
+			passwordCheckbox.hidden = false;
+		} else {
+			passwordCheckbox.hidden = true;
 		}
 
 		this.fillArgumentInput(command);
@@ -145,11 +156,19 @@ function ServerButtonConfigurationDialog() {
 
 	this.togglePassword = function() {
 		var showPassword = document.getElementById("show-password").checked;
-		var textbox = document.getElementById("serverbutton-configuration-password");
-		if(showPassword) {
-			textbox.removeAttribute("type");
-		} else {
-			textbox.setAttribute("type", "password");
+
+		var argumentBox = document.getElementById("arguments");
+		var textboxes = argumentBox.getElementsByTagName("textbox");
+
+		for(var i = 0; i < textboxes.length; i++) {
+			var textbox = textboxes[i];
+			if(textbox.getAttribute("password")) {
+				if(showPassword) {
+					textbox.removeAttribute("type");
+				} else {
+					textbox.setAttribute("type", "password");
+				}
+			}
 		}
 	};
 }
