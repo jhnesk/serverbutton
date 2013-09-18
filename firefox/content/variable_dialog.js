@@ -34,6 +34,6 @@ function VariableDialog() {
 	this.save = function() {
 		this.data.label = document.getElementById("serverbutton-variable-label").value;
 		this.data.type = document.getElementById("serverbutton-variable-type").selectedItem.getAttribute("label");
-		this.data.defaultValue = document.getElementById("serverbutton-variable-default").value = this.data.defaultValue;
+		this.data.defaultValue = document.getElementById("serverbutton-variable-default").value;
 	};
 }
