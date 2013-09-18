@@ -25,7 +25,7 @@ function VariableDialog() {
 	this.init = function() {
 		var typeIndex = {"string": 0, "password": 1, "integer": 2};
 
-		document.getElementById("title-variable").setAttribute("label", this.data.name);
+		document.getElementById("title-variable").value = this.data.name;
 		document.getElementById("serverbutton-variable-label").value = this.data.label;
 		document.getElementById("serverbutton-variable-type").selectedIndex = typeIndex[this.data.type];
 		document.getElementById("serverbutton-variable-default").value = this.data.defaultValue;

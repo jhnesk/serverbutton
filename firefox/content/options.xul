@@ -32,30 +32,28 @@
 					</vbox>
 					<groupbox id="commandconfig">
 						<caption label="Configure command"/>
-						<label value="Command:"/>
+						<label value="Command:" control="config-command"/>
 						<textbox id="config-command" style="min-width: 30em;"/>
-						<label value="Arguments:"/>
+						<label value="Arguments:" control="config-arguments"/>
 						<textbox id="config-arguments" style="min-width: 30em;"/>
 
-						<groupbox>
-							<caption label="Variables"/>
-							<listbox id="variableslist" rows="4"
-								ondblclick="optiondialog.openVariableConfig();"
-								>
-								<listhead flex="1">
-									<listheader label="Name"/>
-									<listheader label="Label"/>
-									<listheader label="Type"/>
-									<listheader label="Default"/>
-								</listhead>
-								<listcols>
-									<listcol flex="1"/>
-									<listcol flex="1"/>
-									<listcol flex="1"/>
-									<listcol flex="1"/>
-								</listcols>
-							</listbox>
-						</groupbox>
+						<label value="Variables:" control="variableslist"/>
+						<listbox id="variableslist" rows="4"
+							ondblclick="optiondialog.openVariableConfig();"
+							>
+							<listhead flex="1">
+								<listheader label="Name"/>
+								<listheader label="Label"/>
+								<listheader label="Type"/>
+								<listheader label="Default"/>
+							</listhead>
+							<listcols>
+								<listcol flex="1"/>
+								<listcol flex="1"/>
+								<listcol flex="1"/>
+								<listcol flex="1"/>
+							</listcols>
+						</listbox>
 						<hbox>
 							<spacer flex="1"/>
 							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
