@@ -155,6 +155,11 @@ function OptionDialog() {
 		}
 	};
 
+	this.removeVariable = function() {
+		var list = document.getElementById("variableslist");
+		list.removeChild(list.selectedItem);
+	};
+
 	this.addCommand = function(type) {
 
 		var commandlist = document.getElementById("commandlist");
