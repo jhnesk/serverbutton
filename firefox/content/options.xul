@@ -10,6 +10,7 @@
 	>
 	<script src="options.js"/>
 	<script src="domain_dialog.js"/>
+	<script src="menulist.js"/>
 
 	<tabbox>
 		<tabs>

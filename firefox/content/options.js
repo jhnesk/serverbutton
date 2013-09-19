@@ -22,25 +22,31 @@ Components.utils.import("resource://serverbutton/configuration.js");
 
 function OptionDialog() {
 
-	this.configlist = new ConfigList();
+	this.configlist;
+
+	this.commandlist;
+
+	this.variableslist;
 
 	this.init = function() {
+
+		this.configlist = new ConfigList();
+		this.commandlist = new MenuList("commandlist");
+		this.variableslist = new MenuList("variableslist");
+
 		var commands = commandConfig.getAll();
 		for(var command in commands) {
 			if(!commands.hasOwnProperty(command)) continue;
-			this.addCommand(command);
+			this.commandlist.addRow([command]);
 		}
-		var commandlist = document.getElementById("commandlist");
 
-		// TODO: handle empty list
-		commandlist.selectedIndex = 0;
+		this.commandlist.selectFirst();
 
 		this.configlist.populate();
 	};
 
 	this.getSelectedType = function() {
-		var commandlist = document.getElementById("commandlist");
-		var item = commandlist.selectedItem;
+		var item = this.commandlist.getSelectedItem();
 		return item.firstChild.getAttribute("label");
 	};
 
@@ -52,7 +58,7 @@ function OptionDialog() {
 		var argumentsNode = document.getElementById("config-arguments");
 		argumentsNode.value = command.args;
 
-		this.clearVarialbes();
+		this.variableslist.clear();
 		for(var variable in command.variables) {
 			if(!command.variables.hasOwnProperty(variable)) continue;
 			this.addVariable(variable);
@@ -60,16 +66,8 @@ function OptionDialog() {
 		this.updateAllVariableChangedStatus();
 	};
 
-	this.clearVarialbes = function() {
-		var list = document.getElementById("variableslist");
-		var items = list.getElementsByTagName("listitem");
-		for(var i = items.length-1; i >= 0; i--) {
-			list.removeChild(items[i]);
-		}
-	};
-
 	this.openVariableConfig = function() {
-		var item = document.getElementById("variableslist").selectedItem;
+		var item = this.variableslist.getSelectedItem();
 		var variable = item.firstChild.getAttribute("label");
 		var labelCell = item.childNodes[1];
 		var typeCell = item.childNodes[2];
@@ -91,8 +89,7 @@ function OptionDialog() {
 	};
 
 	this.updateAllVariableChangedStatus = function() {
-		var list = document.getElementById("variableslist");
-		var items = list.getElementsByTagName("listitem");
+		var items = this.variableslist.getItems();
 		for(var i = items.length-1; i >= 0; i--) {
 			var item = items[i];
 			this.updateVariableChangedStatus(item);
@@ -130,20 +127,11 @@ function OptionDialog() {
 		var command = commandConfig.get(type);
 		var variableObject = command.variables[variable];
 
-		var list = document.getElementById("variableslist");
-		var row = document.createElement("listitem");
-		this.addCell(row, variable);
 		if(variableObject) {
-			this.addCell(row, variableObject.label);
-			this.addCell(row, variableObject.type);
-			this.addCell(row, variableObject.defaultValue);
+			this.variableslist.addRow([variable, variableObject.label, variableObject.type, variableObject.defaultValue]);
 		} else {
-			// default values for new variables
-			this.addCell(row, variable);
-			this.addCell(row, "string");
-			this.addCell(row, "");
+			this.variableslist.addRow([variable, variable, "string", ""]);
 		}
-		list.appendChild(row);
 	};
 
 	this.newVariable = function() {
@@ -156,18 +144,7 @@ function OptionDialog() {
 	};
 
 	this.removeVariable = function() {
-		var list = document.getElementById("variableslist");
-		list.removeChild(list.selectedItem);
-	};
-
-	this.addCommand = function(type) {
-
-		var commandlist = document.getElementById("commandlist");
-		var row = document.createElement("listitem");
-		var cell = document.createElement("listcell");
-		cell.setAttribute("label", type);
-		row.appendChild(cell);
-		commandlist.appendChild(row);
+		this.variableslist.removeSelected();
 	};
 
 	this.removeCommand = function(type) {
@@ -179,17 +156,17 @@ function OptionDialog() {
 	};
 
 	this.removeFromList = function(type) {
-		var commandlist = document.getElementById("commandlist");
-		var children = commandlist.childNodes;
+		var list = this.commandlist.list;
+		var children = list.childNodes;
 		var length = children.length;
 		for(var i = 0; i < length; i++) {
 			var cell = children[i].firstChild;
 			if(cell.getAttribute("label") === type) {
-				commandlist.removeChild(children[i]);
+				list.removeChild(children[i]);
 				if(i === length-1) {
-					commandlist.selectedIndex = i-2;
+					list.selectedIndex = i-2;
 				} else {
-					commandlist.selectedIndex = i-1;
+					list.selectedIndex = i-1;
 				}
 				break;
 			}
@@ -202,7 +179,7 @@ function OptionDialog() {
 		var result = promptService.prompt(null, "New type", "Key:", input, null, {});
 		if(result && input.value) {
 			commandConfig.set(input.value, {});
-			this.addCommand(input.value);
+			this.commandlist.addRow([input.value]);
 		}
 	};
 
@@ -222,8 +199,7 @@ function OptionDialog() {
 
 		var result = {};
 
-		var list = document.getElementById("variableslist");
-		var items = list.getElementsByTagName("listitem");
+		var items = this.variableslist.getItems();
 		for(var i = 0; i < items.length; i++) {
 			var item = items[i];
 			var variable = item.firstChild.getAttribute("label");
@@ -241,37 +217,11 @@ function OptionDialog() {
 	};
 
 	this.variableUp = function() {
-		var list = document.getElementById("variableslist");
-		var selected = list.selectedItem;
-		if(!selected) {
-			return;
-		}
-		var previous = selected.previousSibling;
-
-		if(previous && previous.tagName === "listitem") {
-			list.removeChild(selected);
-			list.insertBefore(selected, previous);
-			list.selectedItem = selected;
-		}
+		this.variableslist.moveSelectedUp();
 	};
 
 	this.variableDown = function() {
-		var list = document.getElementById("variableslist");
-		var selected = list.selectedItem;
-		if(!selected) {
-			return;
-		}
-		var next = selected.nextSibling;
-
-		if(next && next.tagName === "listitem") {
-			list.removeChild(selected);
-			if(next.nextSibling) {
-				list.insertBefore(selected, next.nextSibling);
-			} else {
-				list.appendChild(selected);
-			}
-			list.selectedItem = selected;
-		}
+		this.variableslist.moveSelectedDown();
 	};
 
 	this.resetCommand = function() {
@@ -338,66 +288,41 @@ function OptionDialog() {
 			return filePicker.file;
 		}
 	};
-
-	this.addCell = function(row, label) {
-		var cell = document.createElement("listcell");
-		cell.setAttribute("label", label);
-		row.appendChild(cell);
-	};
 }
 
 function ConfigList() {
 
+	this.list = new MenuList("configlist");
+
 	this.editAction = function() {
-		var item = document.getElementById("configlist").selectedItem;
+		var item = this.list.getSelectedItem();
 		if(item === null) {
 			return;
 		}
 		var domain = item.firstChild.getAttribute("label");
 		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
-		this.clear();
+		this.list.clear();
 		this.populate();
 	};
 
 	this.deleteAction = function() {
-		var item = document.getElementById("configlist").selectedItem;
+		var item = this.list.getSelectedItem();
 		if(item === null) {
 			return;
 		}
 		var domain = item.firstChild.getAttribute("label");
 		domainConfig.remove(domain);
 		domainConfig.save();
-		this.clear();
-		this.populate();
-	};
-
-	this.clear = function() {
-		var list = document.getElementById("configlist");
-		var items = list.getElementsByTagName("listitem");
-		for(var i = items.length-1; i >= 0; i--) {
-			list.removeChild(items[i]);
-		}
+		this.list.removeSelected();
 	};
 
 	this.populate = function() {
-		var list = document.getElementById("configlist");
 
 		var config = domainConfig.getAll();
 		for(var domain in config) {
 			if(!config.hasOwnProperty(domain)) continue;
 			if(!config[domain]) continue;
-
-			var row = document.createElement("listitem");
-			this.addCell(row, domain);
-			this.addCell(row, config[domain].type);
-
-			list.appendChild(row);
+			this.list.addRow([domain, config[domain].type]);
 		}
-	};
-
-	this.addCell = function(row, label) {
-		var cell = document.createElement("listcell");
-		cell.setAttribute("label", label);
-		row.appendChild(cell);
 	};
 }
