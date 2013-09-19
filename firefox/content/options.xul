@@ -39,6 +39,7 @@
 
 						<label value="Variables:" control="variableslist"/>
 						<listbox id="variableslist" rows="4"
+							context="variablelistmenu"
 							ondblclick="optiondialog.openVariableConfig();"
 							>
 							<listhead flex="1">
@@ -54,6 +55,14 @@
 								<listcol flex="1"/>
 							</listcols>
 						</listbox>
+						<menupopup id="variablelistmenu">
+							<menuitem label="Move up"
+								command="variable-up"
+								/>
+							<menuitem label="Move down"
+								command="variable-down"
+								/>
+						</menupopup>
 						<hbox>
 							<spacer flex="1"/>
 							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
@@ -73,7 +82,9 @@
 							key="delete-key"
 							/>
 					</menupopup>
-					<listbox id="configlist" flex="1" context="domainconfigmenu" ondblclick="optiondialog.configlist.editAction();">
+					<listbox id="configlist" flex="1"
+						context="domainconfigmenu"
+						ondblclick="optiondialog.configlist.editAction();">
 						<listhead flex="1">
 							<listheader label="Domain"/>
 							<listheader label="Type"/>
@@ -95,6 +106,8 @@
 		<command id="toggle-password" oncommand="return optiondialog.configlist.togglePassword();"/>
 		<command id="delete-item" oncommand="return optiondialog.configlist.deleteAction();"/>
 		<command id="edit-item" oncommand="return optiondialog.configlist.editAction();"/>
+		<command id="variable-up" oncommand="return optiondialog.variableUp();"/>
+		<command id="variable-down" oncommand="return optiondialog.variableDown();"/>
 	</commandset>
 	<keyset>
 		<key id="delete-key" command="delete-item" keycode="VK_DELETE"/>

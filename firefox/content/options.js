@@ -203,7 +203,7 @@ function OptionDialog() {
 
 		var list = document.getElementById("variableslist");
 		var items = list.getElementsByTagName("listitem");
-		for(var i = items.length-1; i >= 0; i--) {
+		for(var i = 0; i < items.length; i++) {
 			var item = items[i];
 			var variable = item.firstChild.getAttribute("label");
 			var labelCell = item.childNodes[1];
@@ -217,6 +217,40 @@ function OptionDialog() {
 			};
 		}
 		return result;
+	};
+
+	this.variableUp = function() {
+		var list = document.getElementById("variableslist");
+		var selected = list.selectedItem;
+		if(!selected) {
+			return;
+		}
+		var previous = selected.previousSibling;
+
+		if(previous && previous.tagName === "listitem") {
+			list.removeChild(selected);
+			list.insertBefore(selected, previous);
+			list.selectedItem = selected;
+		}
+	};
+
+	this.variableDown = function() {
+		var list = document.getElementById("variableslist");
+		var selected = list.selectedItem;
+		if(!selected) {
+			return;
+		}
+		var next = selected.nextSibling;
+
+		if(next && next.tagName === "listitem") {
+			list.removeChild(selected);
+			if(next.nextSibling) {
+				list.insertBefore(selected, next.nextSibling);
+			} else {
+				list.appendChild(selected);
+			}
+			list.selectedItem = selected;
+		}
 	};
 
 	this.resetCommand = function() {
