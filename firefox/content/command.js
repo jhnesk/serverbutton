@@ -35,6 +35,11 @@ function Command(config) {
 				var value = this.config[variable];
 				if(value) {
 					args[i] = args[i].replace("${" + variable + "}", value);
+				} else {
+					var defaultValue = this.command.variables[variable].defaultValue;
+					if(defaultValue) {
+						args[i] = args[i].replace("${" + variable + "}", defaultValue);
+					}
 				}
 			}
 		}

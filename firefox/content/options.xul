@@ -18,7 +18,7 @@
 		</tabs>
 		<tabpanels>
 			<tabpanel id="commandtab">
-				<hbox>
+				<hbox flex="1">
 					<vbox>
 						<listbox id="commandlist" onselect="optiondialog.fillCommandConfigFields();">
 							<listcols>
@@ -30,7 +30,7 @@
 							<button label="Remove" icon="remove" onclick="optiondialog.removeCommand(optiondialog.getSelectedType());"/>
 						</hbox>
 					</vbox>
-					<groupbox id="commandconfig">
+					<groupbox id="commandconfig" flex="1">
 						<caption label="Configure command"/>
 						<label value="Command:" control="config-command"/>
 						<textbox id="config-command" style="min-width: 30em;"/>

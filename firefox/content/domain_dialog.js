@@ -118,11 +118,8 @@ function ServerButtonConfigurationDialog() {
 			if(!command.variables.hasOwnProperty(variable)) continue;
 			var element = document.getElementById("serverbutton-config-variable-" + variable);
 
-			if(this.config) {
-				var value = this.config[variable];
-				if(value) {
-					element.value = value;
-				}
+			if(this.config && this.config[variable]) {
+				element.value = this.config[variable];
 			} else {
 				var defaultValue = command.variables[variable].defaultValue;
 				if(defaultValue) {
