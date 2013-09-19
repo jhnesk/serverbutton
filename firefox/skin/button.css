@@ -1,16 +1,16 @@
 
 #serverbutton-toolbarbutton {
-	list-style-image: url("chrome://serverbutton/skin/server-large.png");
+	list-style-image: url("chrome://serverbutton/skin/icons/server-large.png");
 }
 
 #serverbutton-toolbarbutton[config="true"] {
-	list-style-image: url("chrome://serverbutton/skin/add-large.png");
+	list-style-image: url("chrome://serverbutton/skin/icons/serveradd-large.png");
 }
 
 toolbar[iconsize="small"] #serverbutton-toolbarbutton {
-	list-style-image: url("chrome://serverbutton/skin/server.png");
+	list-style-image: url("chrome://serverbutton/skin/icons/server.png");
 }
 
 toolbar[iconsize="small"] #serverbutton-toolbarbutton[config="true"] {
-	list-style-image: url("chrome://serverbutton/skin/add.png");
+	list-style-image: url("chrome://serverbutton/skin/icons/serveradd.png");
 }

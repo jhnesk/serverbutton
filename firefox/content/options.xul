@@ -56,17 +56,28 @@
 							</listcols>
 						</listbox>
 						<menupopup id="variablelistmenu">
+							<menuitem label="Edit"
+								command="variable-edit"
+								/>
 							<menuitem label="Add"
 								command="variable-add"
+								class="menuitem-iconic"
+								image="chrome://serverbutton/skin/icons/add.png"
 								/>
 							<menuitem label="Delete"
 								command="variable-delete"
+								class="menuitem-iconic"
+								image="chrome://serverbutton/skin/icons/delete.png"
 								/>
 							<menuitem label="Move up"
 								command="variable-up"
+								class="menuitem-iconic"
+								image="chrome://serverbutton/skin/icons/up.png"
 								/>
 							<menuitem label="Move down"
 								command="variable-down"
+								class="menuitem-iconic"
+								image="chrome://serverbutton/skin/icons/down.png"
 								/>
 						</menupopup>
 						<hbox>
@@ -85,7 +96,8 @@
 							/>
 						<menuitem label="Delete"
 							command="delete-item"
-							key="delete-key"
+							class="menuitem-iconic"
+							image="chrome://serverbutton/skin/icons/delete.png"
 							/>
 					</menupopup>
 					<listbox id="configlist" flex="1"
@@ -109,15 +121,12 @@
 		</tabpanels>
 	</tabbox>
 	<commandset>
-		<command id="toggle-password" oncommand="return optiondialog.configlist.togglePassword();"/>
 		<command id="delete-item" oncommand="return optiondialog.configlist.deleteAction();"/>
 		<command id="edit-item" oncommand="return optiondialog.configlist.editAction();"/>
 		<command id="variable-up" oncommand="return optiondialog.variableUp();"/>
 		<command id="variable-down" oncommand="return optiondialog.variableDown();"/>
 		<command id="variable-add" oncommand="return optiondialog.newVariable();"/>
+		<command id="variable-edit" oncommand="return optiondialog.openVariableConfig();"/>
 		<command id="variable-delete" oncommand="return optiondialog.removeVariable();"/>
 	</commandset>
-	<keyset>
-		<key id="delete-key" command="delete-item" keycode="VK_DELETE"/>
-	</keyset>
 </dialog>

@@ -16,6 +16,8 @@
 					oncommand="toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
+					class="menuitem-iconic"
+					image="chrome://serverbutton/skin/icons/server.png"
 					/>
 				<menuitem
 					label="Edit current domain"
