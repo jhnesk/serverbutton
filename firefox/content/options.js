@@ -133,10 +133,26 @@ function OptionDialog() {
 		var list = document.getElementById("variableslist");
 		var row = document.createElement("listitem");
 		this.addCell(row, variable);
-		this.addCell(row, variableObject.label);
-		this.addCell(row, variableObject.type);
-		this.addCell(row, variableObject.defaultValue);
+		if(variableObject) {
+			this.addCell(row, variableObject.label);
+			this.addCell(row, variableObject.type);
+			this.addCell(row, variableObject.defaultValue);
+		} else {
+			// default values for new variables
+			this.addCell(row, variable);
+			this.addCell(row, "string");
+			this.addCell(row, "");
+		}
 		list.appendChild(row);
+	};
+
+	this.newVariable = function() {
+		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+		var input = {value:""};
+		var result = promptService.prompt(null, "New variable", "Key:", input, null, {});
+		if(result && input.value) {
+			this.addVariable(input.value);
+		}
 	};
 
 	this.addCommand = function(type) {

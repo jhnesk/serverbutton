@@ -56,6 +56,9 @@
 							</listcols>
 						</listbox>
 						<menupopup id="variablelistmenu">
+							<menuitem label="Add"
+								command="variable-add"
+								/>
 							<menuitem label="Move up"
 								command="variable-up"
 								/>
@@ -108,6 +111,7 @@
 		<command id="edit-item" oncommand="return optiondialog.configlist.editAction();"/>
 		<command id="variable-up" oncommand="return optiondialog.variableUp();"/>
 		<command id="variable-down" oncommand="return optiondialog.variableDown();"/>
+		<command id="variable-add" oncommand="return optiondialog.newVariable();"/>
 	</commandset>
 	<keyset>
 		<key id="delete-key" command="delete-item" keycode="VK_DELETE"/>
