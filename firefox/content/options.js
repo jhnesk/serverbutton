@@ -57,6 +57,7 @@ function OptionDialog() {
 			if(!command.variables.hasOwnProperty(variable)) continue;
 			this.addVariable(variable);
 		}
+		this.updateAllVariableChangedStatus();
 	};
 
 	this.clearVarialbes = function() {
@@ -85,6 +86,43 @@ function OptionDialog() {
 		labelCell.setAttribute("label", data.label);
 		typeCell.setAttribute("label", data.type);
 		defaultValueCell.setAttribute("label", data.defaultValue);
+
+		this.updateVariableChangedStatus(item);
+	};
+
+	this.updateAllVariableChangedStatus = function() {
+		var list = document.getElementById("variableslist");
+		var items = list.getElementsByTagName("listitem");
+		for(var i = items.length-1; i >= 0; i--) {
+			var item = items[i];
+			this.updateVariableChangedStatus(item);
+		}
+	};
+
+	this.updateVariableChangedStatus = function(item) {
+		var variable = item.firstChild.getAttribute("label");
+		var labelCell = item.childNodes[1];
+		var typeCell = item.childNodes[2];
+		var defaultValueCell = item.childNodes[3];
+
+		var type = this.getSelectedType();
+		var variableObject = commandConfig.get(type).variables[variable];
+
+		if(labelCell.getAttribute("label") !== variableObject.label) {
+			labelCell.setAttribute("style", "font-weight: bold;");
+		} else {
+			labelCell.setAttribute("style", "font-weight: normal;");
+		}
+		if(typeCell.getAttribute("label") !== variableObject.type) {
+			typeCell.setAttribute("style", "font-weight: bold;");
+		} else {
+			typeCell.setAttribute("style", "font-weight: normal;");
+		}
+		if(defaultValueCell.getAttribute("label") !== variableObject.defaultValue) {
+			defaultValueCell.setAttribute("style", "font-weight: bold;");
+		} else {
+			defaultValueCell.setAttribute("style", "font-weight: normal;");
+		}
 	};
 
 	this.addVariable = function(variable) {
@@ -156,6 +194,7 @@ function OptionDialog() {
 		command.args = argumentsNode.value;
 		command.variables = this.getCurrentVariables();
 		commandConfig.set(type, command);
+		this.updateAllVariableChangedStatus();
 	};
 
 	this.getCurrentVariables = function() {
