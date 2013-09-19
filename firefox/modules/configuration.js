@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 var EXPORTED_SYMBOLS = ["ConfigFile", "domainConfig", "commandConfig"];
 
@@ -68,7 +69,7 @@ function ConfigFile(f) {
 	this.write = function(jsonObject) {
 		var content = JSON.stringify(jsonObject);
 		if(!this.file.exists()) {
-			this.file.create(0, 0600);
+			this.file.create(0, parseInt("0600", 8));
 		}
 		var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
 		stream.write(content, content.length);

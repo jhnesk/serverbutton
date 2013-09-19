@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 Components.utils.import("resource://serverbutton/configuration.js");
 
@@ -245,7 +246,7 @@ function OptionDialog() {
 			importFile.load();
 			var importConfig = importFile.getAll();
 
-			for(domain in importConfig) {
+			for(var domain in importConfig) {
 				if(!importConfig.hasOwnProperty(domain)) continue;
 				if(!importConfig[domain]) continue;
 

@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 Components.utils.import("resource://serverbutton/configuration.js");
 

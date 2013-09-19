@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 function Command(config) {
 
@@ -28,7 +29,7 @@ function Command(config) {
 		var filename = this.command.command;
 		var args = this.parseArguments(this.command.args);
 
-		for(variable in this.command.variables) {
+		for(var variable in this.command.variables) {
 			if(!this.command.variables.hasOwnProperty(variable)) continue;
 
 			for(var i = 0; i < args.length; i++) {
