@@ -21,7 +21,7 @@
 			<tabpanel id="commandtab">
 				<hbox flex="1">
 					<vbox>
-						<listbox id="commandlist" onselect="optiondialog.fillCommandConfigFields();">
+						<listbox id="commandlist" onselect="optiondialog.fillCommandConfigFields();" flex="1">
 							<listcols>
 								<listcol/>
 							</listcols>
@@ -31,8 +31,7 @@
 							<button label="Remove" icon="remove" onclick="optiondialog.removeCommand(optiondialog.getSelectedType());"/>
 						</hbox>
 					</vbox>
-					<groupbox id="commandconfig" flex="1">
-						<caption label="Configure command"/>
+					<vbox flex="1">
 						<label value="Command:" control="config-command"/>
 						<textbox id="config-command" style="min-width: 30em;"/>
 						<label value="Arguments:" control="config-arguments"/>
@@ -75,7 +74,7 @@
 							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
 							<button label="Apply" icon="apply" onclick="optiondialog.applyCommand();"/>
 						</hbox>
-					</groupbox>
+					</vbox>
 				</hbox>
 			</tabpanel>
 			<tabpanel id="domaintab">
