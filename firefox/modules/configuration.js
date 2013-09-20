@@ -19,8 +19,6 @@
  */
 "use strict";
 
-var EXPORTED_SYMBOLS = ["ConfigFile", "domainConfig", "commandConfig", "getDefaultCommandConfig"];
-
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
 function ConfigFile(f) {
@@ -214,13 +212,17 @@ function getDefaultCommandConfig() {
 	}
 }
 
-var domainConfig = new ConfigFile(getDomainFile());
-domainConfig.load();
+var EXPORTED_SYMBOLS = ["ServerButtonConfig", "getDefaultCommandConfig", "ConfigFile"];
+
+var ServerButtonConfig = {};
+
+ServerButtonConfig.domains = new ConfigFile(getDomainFile());
+ServerButtonConfig.domains.load();
 
 var commandFile = getCommandFile();
-var commandConfig = new ConfigFile(commandFile);
+ServerButtonConfig.commands = new ConfigFile(commandFile);
 if(!commandFile.exists()) {
-	commandConfig.config = getDefaultCommandConfig();
+	ServerButtonConfig.commands.config = getDefaultCommandConfig();
 }
-commandConfig.load();
+ServerButtonConfig.commands.load();
 

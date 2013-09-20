@@ -20,11 +20,13 @@
 "use strict";
 var serverbutton = serverbutton || {};
 
+Components.utils.import("resource://serverbutton/configuration.js");
+
 serverbutton.Command = function(config) {
 
 	this.config = config;
 
-	this.command = commandConfig.get(config.type);
+	this.command = ServerButtonConfig.commands.get(config.type);
 
 };
 

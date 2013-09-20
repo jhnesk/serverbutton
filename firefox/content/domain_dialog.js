@@ -26,7 +26,7 @@ serverbutton.DomainDialog = function() {
 
 	this.domain = window.arguments[0];
 
-	this.config = domainConfig.get(this.domain);
+	this.config = ServerButtonConfig.domains.get(this.domain);
 
 };
 
@@ -37,7 +37,7 @@ serverbutton.DomainDialog.prototype.init = function() {
 	var selected = null;
 	var selectedCommand = null;
 
-	var commands = commandConfig.getAll();
+	var commands = ServerButtonConfig.commands.getAll();
 
 	for(var command in commands) {
 		if(!commands.hasOwnProperty(command)) continue;
@@ -61,7 +61,7 @@ serverbutton.DomainDialog.prototype.init = function() {
 
 serverbutton.DomainDialog.prototype.commandChange = function() {
 	var commandList = document.getElementById("serverbutton-configuration-type");
-	var commands = commandConfig.getAll();
+	var commands = ServerButtonConfig.commands.getAll();
 	this.updateArgumentInput(commands[commandList.selectedItem.value]);
 };
 
@@ -135,7 +135,7 @@ serverbutton.DomainDialog.prototype.fillArgumentInput = function(command) {
 
 serverbutton.DomainDialog.prototype.save = function() {
 	var type = document.getElementById("serverbutton-configuration-type").selectedItem.value;
-	var command = commandConfig.get(type);
+	var command = ServerButtonConfig.commands.get(type);
 
 	this.config = {type:type};
 
@@ -145,13 +145,13 @@ serverbutton.DomainDialog.prototype.save = function() {
 		this.config[variable] = value;
 	}
 
-	domainConfig.set(this.domain, this.config);
-	domainConfig.save();
+	ServerButtonConfig.domains.set(this.domain, this.config);
+	ServerButtonConfig.domains.save();
 };
 
 serverbutton.DomainDialog.prototype.remove = function() {
-	domainConfig.remove(this.domain);
-	domainConfig.save();
+	ServerButtonConfig.domains.remove(this.domain);
+	ServerButtonConfig.domains.save();
 	window.close();
 };
 

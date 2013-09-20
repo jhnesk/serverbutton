@@ -71,7 +71,7 @@ serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
 
 serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 	var button = document.getElementById("serverbutton-toolbarbutton");
-	var config = domainConfig.get(this.domain);
+	var config = ServerButtonConfig.domains.get(this.domain);
 	if(config) {
 		button.removeAttribute("config");
 		button.setAttribute("oncommand", "serverbutton.toolbarButton.connect();");
@@ -94,7 +94,7 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 };
 
 serverbutton.ToolbarButton.prototype.connect = function() {
-	var config = domainConfig.get(this.domain);
+	var config = ServerButtonConfig.domains.get(this.domain);
 
 	if(config != null) {
 		var command;

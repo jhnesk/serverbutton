@@ -37,7 +37,7 @@ serverbutton.OptionDialog.prototype.init = function() {
 	this.commandlist = new serverbutton.MenuList("commandlist");
 	this.variableslist = new serverbutton.MenuList("variableslist");
 
-	var commands = commandConfig.getAll();
+	var commands = ServerButtonConfig.commands.getAll();
 	for(var command in commands) {
 		if(!commands.hasOwnProperty(command)) continue;
 		this.commandlist.addRow([command]);
@@ -55,7 +55,7 @@ serverbutton.OptionDialog.prototype.getSelectedType = function() {
 
 serverbutton.OptionDialog.prototype.fillCommandConfigFields = function() {
 	var type = this.getSelectedType();
-	var command = commandConfig.get(type);
+	var command = ServerButtonConfig.commands.get(type);
 	var commandNode = document.getElementById("config-command");
 	commandNode.value = command.command || "";
 	var argumentsNode = document.getElementById("config-arguments");
@@ -108,7 +108,7 @@ serverbutton.OptionDialog.prototype.updateVariableChangedStatus = function(item)
 	var defaultValueCell = item.childNodes[3];
 
 	var type = this.getSelectedType();
-	var variableObject = commandConfig.get(type).variables[variable];
+	var variableObject = ServerButtonConfig.commands.get(type).variables[variable];
 
 	if(labelCell.getAttribute("label") !== variableObject.label) {
 		labelCell.setAttribute("style", "font-weight: bold;");
@@ -129,7 +129,7 @@ serverbutton.OptionDialog.prototype.updateVariableChangedStatus = function(item)
 
 serverbutton.OptionDialog.prototype.addVariable = function(variable) {
 	var type = this.getSelectedType();
-	var command = commandConfig.get(type);
+	var command = ServerButtonConfig.commands.get(type);
 	command.variables = command.variables || {};
 	var variableObject = command.variables[variable];
 
@@ -156,7 +156,7 @@ serverbutton.OptionDialog.prototype.removeVariable = function() {
 serverbutton.OptionDialog.prototype.removeCommand = function(type) {
 	var promtService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
 	if(promtService.confirm(window, "Remove command", "Are you sure you wan't to remove this command?")) {
-		commandConfig.remove(type);
+		ServerButtonConfig.commands.remove(type);
 		this.removeFromList(type);
 	}
 };
@@ -184,20 +184,20 @@ serverbutton.OptionDialog.prototype.addType = function() {
 	var input = {value:""};
 	var result = promptService.prompt(null, "New type", "Key:", input, null, {});
 	if(result && input.value) {
-		commandConfig.set(input.value, {command: "", variables: {}, args: ""});
+		ServerButtonConfig.commands.set(input.value, {command: "", variables: {}, args: ""});
 		this.commandlist.addRow([input.value]);
 	}
 };
 
 serverbutton.OptionDialog.prototype.applyCommand = function() {
 	var type = this.getSelectedType();
-	var command = commandConfig.get(type);
+	var command = ServerButtonConfig.commands.get(type);
 	var commandNode = document.getElementById("config-command");
 	command.command = commandNode.value;
 	var argumentsNode = document.getElementById("config-arguments");
 	command.args = argumentsNode.value;
 	command.variables = this.getCurrentVariables();
-	commandConfig.set(type, command);
+	ServerButtonConfig.commands.set(type, command);
 	this.updateAllVariableChangedStatus();
 };
 
@@ -234,7 +234,7 @@ serverbutton.OptionDialog.prototype.restoreDefaultCommand = function() {
 	var type = this.getSelectedType();
 	var defaults = getDefaultCommandConfig();
 	if(defaults[type]) {
-		commandConfig.set(type, defaults[type]);
+		ServerButtonConfig.commands.set(type, defaults[type]);
 	} else {
 		alert("No default found for " + type);
 	}
@@ -247,11 +247,11 @@ serverbutton.OptionDialog.prototype.resetCommand = function() {
 
 serverbutton.OptionDialog.prototype.save = function() {
 	this.applyCommand();
-	commandConfig.save();
+	ServerButtonConfig.commands.save();
 };
 
 serverbutton.OptionDialog.prototype.cancel = function() {
-	commandConfig.load();
+	ServerButtonConfig.commands.load();
 };
 
 serverbutton.OptionDialog.prototype.importConfig = function() {
@@ -266,9 +266,9 @@ serverbutton.OptionDialog.prototype.importConfig = function() {
 			if(!importConfig.hasOwnProperty(domain)) continue;
 			if(!importConfig[domain]) continue;
 
-			domainConfig.set(domain, importFile.get(domain));
+			ServerButtonConfig.domains.set(domain, importFile.get(domain));
 		}
-		domainConfig.save();
+		ServerButtonConfig.domains.save();
 		this.configlist.list.clear();
 		this.configlist.populate();
 	}
@@ -290,7 +290,7 @@ serverbutton.OptionDialog.prototype.exportConfig = function() {
 	var file = this.selectExportFile();
 	if(file) {
 		var exportConfig = new ConfigFile(file);
-		exportConfig.write(domainConfig.getAll());
+		exportConfig.write(ServerButtonConfig.domains.getAll());
 	}
 };
 
@@ -329,14 +329,14 @@ serverbutton.ConfigList.prototype.deleteAction = function() {
 		return;
 	}
 	var domain = item.firstChild.getAttribute("label");
-	domainConfig.remove(domain);
-	domainConfig.save();
+	ServerButtonConfig.domains.remove(domain);
+	ServerButtonConfig.domains.save();
 	this.list.removeSelected();
 };
 
 serverbutton.ConfigList.prototype.populate = function() {
 
-	var config = domainConfig.getAll();
+	var config = ServerButtonConfig.domains.getAll();
 	for(var domain in config) {
 		if(!config.hasOwnProperty(domain)) continue;
 		if(!config[domain]) continue;
