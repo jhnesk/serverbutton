@@ -19,7 +19,7 @@
  */
 "use strict";
 
-var EXPORTED_SYMBOLS = ["ConfigFile", "domainConfig", "commandConfig"];
+var EXPORTED_SYMBOLS = ["ConfigFile", "domainConfig", "commandConfig", "getDefaultCommandConfig"];
 
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
@@ -159,7 +159,7 @@ function getDefaultCommandConfig() {
 					defaultValue: ""
 				}
 			},
-			args: "-u ${user} -p ${password} -g 1280x960 ${host}"
+			args: "-u ${user} -p ${password} ${host}"
 		},
 		vmware: {
 			command: "/usr/bin/vmware-view",
@@ -185,17 +185,20 @@ function getDefaultCommandConfig() {
 	};
 
 	var macCommands = {
-		"ssh": "",
-		"ftp": "",
-		"rdesktop": "",
-		"vmware": ""
 	};
 
 	var windowsCommands = {
-		"ssh": "",
-		"ftp": "",
-		"rdesktop": "",
-		"vmware": ""
+		"rdesktop": {
+			command: "C:\\Windows\\System32\\mstsc.exe",
+			variables: {
+				"host": {
+					label: "Host",
+					type: "string",
+					defaultValue: ""
+				}
+			},
+			args: "/v:${host} "
+		}
 	};
 
 	var os = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULRuntime).OS;  

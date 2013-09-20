@@ -228,6 +228,17 @@ function OptionDialog() {
 		this.variableslist.moveSelectedDown();
 	};
 
+	this.restoreDefaultCommand = function() {
+		var type = this.getSelectedType();
+		var defaults = getDefaultCommandConfig();
+		if(defaults[type]) {
+			commandConfig.set(type, defaults[type]);
+		} else {
+			alert("No default found for " + type);
+		}
+		this.fillCommandConfigFields();
+	};
+
 	this.resetCommand = function() {
 		this.fillCommandConfigFields();
 	};

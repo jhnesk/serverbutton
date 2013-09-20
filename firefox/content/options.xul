@@ -82,6 +82,7 @@
 						</menupopup>
 						<hbox>
 							<spacer flex="1"/>
+							<button label="Restore defaults" icon="clear" onclick="optiondialog.restoreDefaultCommand();"/>
 							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
 							<button label="Apply" icon="apply" onclick="optiondialog.applyCommand();"/>
 						</hbox>
