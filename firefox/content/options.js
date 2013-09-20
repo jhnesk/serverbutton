@@ -55,14 +55,16 @@ function OptionDialog() {
 		var type = this.getSelectedType();
 		var command = commandConfig.get(type);
 		var commandNode = document.getElementById("config-command");
-		commandNode.value = command.command;
+		commandNode.value = command.command || "";
 		var argumentsNode = document.getElementById("config-arguments");
-		argumentsNode.value = command.args;
+		argumentsNode.value = command.args || "";
 
 		this.variableslist.clear();
-		for(var variable in command.variables) {
-			if(!command.variables.hasOwnProperty(variable)) continue;
-			this.addVariable(variable);
+		if(command.variables) {
+			for(var variable in command.variables) {
+				if(!command.variables.hasOwnProperty(variable)) continue;
+				this.addVariable(variable);
+			}
 		}
 		this.updateAllVariableChangedStatus();
 	};
@@ -126,6 +128,7 @@ function OptionDialog() {
 	this.addVariable = function(variable) {
 		var type = this.getSelectedType();
 		var command = commandConfig.get(type);
+		command.variables = command.variables || {};
 		var variableObject = command.variables[variable];
 
 		if(variableObject) {
@@ -179,7 +182,7 @@ function OptionDialog() {
 		var input = {value:""};
 		var result = promptService.prompt(null, "New type", "Key:", input, null, {});
 		if(result && input.value) {
-			commandConfig.set(input.value, {});
+			commandConfig.set(input.value, {command: "", variables: {}, args: ""});
 			this.commandlist.addRow([input.value]);
 		}
 	};
@@ -253,7 +256,7 @@ function OptionDialog() {
 				domainConfig.set(domain, importFile.get(domain));
 			}
 			domainConfig.save();
-			this.configlist.clear();
+			this.configlist.list.clear();
 			this.configlist.populate();
 		}
 	};
