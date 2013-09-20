@@ -18,42 +18,44 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 "use strict";
+var serverbutton = serverbutton || {};
 
-function Command(config) {
+serverbutton.Command = function(config) {
 
 	this.config = config;
 
 	this.command = commandConfig.get(config.type);
 
-	this.run = function() {
-		var filename = this.command.command;
-		var args = this.parseArguments(this.command.args);
+};
 
-		for(var variable in this.command.variables) {
-			if(!this.command.variables.hasOwnProperty(variable)) continue;
+serverbutton.Command.prototype.run = function() {
+	var filename = this.command.command;
+	var args = this.parseArguments(this.command.args);
 
-			for(var i = 0; i < args.length; i++) {
-				var value = this.config[variable];
-				if(value) {
-					args[i] = args[i].replace("${" + variable + "}", value);
-				} else {
-					var defaultValue = this.command.variables[variable].defaultValue;
-					if(defaultValue) {
-						args[i] = args[i].replace("${" + variable + "}", defaultValue);
-					}
+	for(var variable in this.command.variables) {
+		if(!this.command.variables.hasOwnProperty(variable)) continue;
+
+		for(var i = 0; i < args.length; i++) {
+			var value = this.config[variable];
+			if(value) {
+				args[i] = args[i].replace("${" + variable + "}", value);
+			} else {
+				var defaultValue = this.command.variables[variable].defaultValue;
+				if(defaultValue) {
+					args[i] = args[i].replace("${" + variable + "}", defaultValue);
 				}
 			}
 		}
-
-		var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-		file.initWithPath(filename);
-
-		var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-		process.init(file);
-		process.run(false, args, args.length);
-	};
-
-	this.parseArguments = function(arg) {
-		return arg.split(" ");
 	}
-}
+
+	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+	file.initWithPath(filename);
+
+	var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
+	process.init(file);
+	process.run(false, args, args.length);
+};
+
+serverbutton.Command.prototype.parseArguments = function(arg) {
+	return arg.split(" ");
+};

@@ -13,7 +13,7 @@
 			<menupopup>
 				<menuitem
 					label="Connect"
-					oncommand="toolbarButton.connect();event.stopPropagation();"
+					oncommand="serverbutton.toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
 					class="menuitem-iconic"
@@ -21,7 +21,7 @@
 					/>
 				<menuitem
 					label="Edit current domain"
-					oncommand="toolbarButton.openConfig();event.stopPropagation();"
+					oncommand="serverbutton.toolbarButton.openConfig();event.stopPropagation();"
 					id="menuitem-config"
 					/>
 			</menupopup>
@@ -31,7 +31,7 @@
 		<key
 			id="serverbutton-shortcut"
 			modifiers="accel alt" key="o"
-			oncommand="toolbarButton.connect();"
+			oncommand="serverbutton.toolbarButton.connect();"
 			/>
 	</keyset>
 </overlay>

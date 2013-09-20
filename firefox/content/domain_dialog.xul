@@ -5,16 +5,16 @@
 	title="Configure domain"
 	buttons="accept,cancel,extra1"
 	buttonlabelextra1="Delete"
-	ondialogextra1="return serverButtonDomainDialog.remove();"
-	ondialogaccept="return serverButtonDomainDialog.save();"
-	onload="serverButtonDomainDialog=new ServerButtonConfigurationDialog();serverButtonDomainDialog.init();"
+	ondialogextra1="return dialogObject.remove();"
+	ondialogaccept="return dialogObject.save();"
+	onload="dialogObject=new serverbutton.DomainDialog();dialogObject.init();"
 	>
 	<script src="domain_dialog.js"/>
 	<label id="title-host" class="header"/>
 	<label control="serverbutton-configuration-type"
 		value="Type"/>
 	<menulist id="serverbutton-configuration-type"
-		oncommand="return serverButtonDomainDialog.commandChange();"
+		oncommand="return dialogObject.commandChange();"
 		>
 		<menupopup>
 		</menupopup>
@@ -22,7 +22,7 @@
 	<vbox id="arguments">
 	</vbox>
 	<commandset>
-		<command id="toggle-password" oncommand="return serverButtonDomainDialog.togglePassword();"/>
+		<command id="toggle-password" oncommand="return dialogObject.togglePassword();"/>
 	</commandset>
 	<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
 </dialog>

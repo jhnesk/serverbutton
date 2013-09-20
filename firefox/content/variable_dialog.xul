@@ -2,10 +2,10 @@
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <dialog id="serverbutton-variable-dialog"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="serverButtonVariableDialog=new VariableDialog();serverButtonVariableDialog.init();"
+	onload="dialogObject=new serverbutton.VariableDialog();dialogObject.init();"
 	title="Edit variable"
 	buttons="accept,cancel"
-	ondialogaccept="return serverButtonVariableDialog.save();"
+	ondialogaccept="return dialogObject.save();"
 	>
 	<script src="variable_dialog.js"/>
 	<label id="title-variable" class="header"/>

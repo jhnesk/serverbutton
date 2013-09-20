@@ -18,23 +18,24 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 "use strict";
+var serverbutton = serverbutton || {};
 
-function VariableDialog() {
+serverbutton.VariableDialog = function() {
 
 	this.data = window.arguments[0];
+};
 
-	this.init = function() {
-		var typeIndex = {"string": 0, "password": 1, "integer": 2};
+serverbutton.VariableDialog.prototype.init = function() {
+	var typeIndex = {"string": 0, "password": 1, "integer": 2};
 
-		document.getElementById("title-variable").value = this.data.name;
-		document.getElementById("serverbutton-variable-label").value = this.data.label;
-		document.getElementById("serverbutton-variable-type").selectedIndex = typeIndex[this.data.type];
-		document.getElementById("serverbutton-variable-default").value = this.data.defaultValue;
-	};
+	document.getElementById("title-variable").value = this.data.name;
+	document.getElementById("serverbutton-variable-label").value = this.data.label;
+	document.getElementById("serverbutton-variable-type").selectedIndex = typeIndex[this.data.type];
+	document.getElementById("serverbutton-variable-default").value = this.data.defaultValue;
+};
 
-	this.save = function() {
-		this.data.label = document.getElementById("serverbutton-variable-label").value;
-		this.data.type = document.getElementById("serverbutton-variable-type").selectedItem.getAttribute("label");
-		this.data.defaultValue = document.getElementById("serverbutton-variable-default").value;
-	};
-}
+serverbutton.VariableDialog.prototype.save = function() {
+	this.data.label = document.getElementById("serverbutton-variable-label").value;
+	this.data.type = document.getElementById("serverbutton-variable-type").selectedItem.getAttribute("label");
+	this.data.defaultValue = document.getElementById("serverbutton-variable-default").value;
+};

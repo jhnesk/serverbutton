@@ -18,6 +18,7 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 "use strict";
+var serverbutton = serverbutton || {};
 
 Components.utils.import("resource://serverbutton/configuration.js");
 
@@ -35,12 +36,12 @@ var ServerButton_urlBarListener = {
 	{
 		if(aURI) {
 			try {
-				toolbarButton.setDomain(aURI.host);
+				serverbutton.toolbarButton.setDomain(aURI.host);
 			} catch(err) {
-				toolbarButton.setDomain(null);
+				serverbutton.toolbarButton.setDomain(null);
 			}
 		} else {
-			toolbarButton.setDomain(null);
+			serverbutton.toolbarButton.setDomain(null);
 		}
 	},
 
@@ -50,74 +51,74 @@ var ServerButton_urlBarListener = {
 	onSecurityChange: function(a, b, c) {}
 };
 
-function ToolbarButton() {
+serverbutton.ToolbarButton = function() {
 
 	this.domain = null;
+};
 
-	this.init = function() {
-		gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
-	};
+serverbutton.ToolbarButton.prototype.init = function() {
+	gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
+};
 
-	this.uninit = function() {
-		gBrowser.removeProgressListener(ServerButton_urlBarListener);
-	};
+serverbutton.ToolbarButton.prototype.uninit = function() {
+	gBrowser.removeProgressListener(ServerButton_urlBarListener);
+};
 
-	this.setDomain = function(domain) {
-		this.domain = domain;
-		this.updateButtonState();
-	};
+serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
+	this.domain = domain;
+	this.updateButtonState();
+};
 
-	this.updateButtonState = function() {
-		var button = document.getElementById("serverbutton-toolbarbutton");
-		var config = domainConfig.get(this.domain);
-		if(config) {
-			button.removeAttribute("config");
-			button.setAttribute("oncommand", "toolbarButton.connect();");
-			button.setAttribute("tooltiptext", "Connect to " + config.host);
-			button.disabled=false;
-			document.getElementById("menuitem-connect").disabled=false;
-		} else if(this.domain) {
-			button.setAttribute("config", "true");
-			button.setAttribute("oncommand", "toolbarButton.openConfig();");
-			button.setAttribute("tooltiptext", "Configure domain");
-			button.disabled=false;
-			document.getElementById("menuitem-connect").disabled=true;
-		} else {
-			button.removeAttribute("config");
-			button.removeAttribute("oncommand");
-			button.setAttribute("tooltiptext", "No domain");
-			button.disabled=true;
-			document.getElementById("menuitem-connect").disabled=true;
+serverbutton.ToolbarButton.prototype.updateButtonState = function() {
+	var button = document.getElementById("serverbutton-toolbarbutton");
+	var config = domainConfig.get(this.domain);
+	if(config) {
+		button.removeAttribute("config");
+		button.setAttribute("oncommand", "serverbutton.toolbarButton.connect();");
+		button.setAttribute("tooltiptext", "Connect to " + config.host);
+		button.disabled=false;
+		document.getElementById("menuitem-connect").disabled=false;
+	} else if(this.domain) {
+		button.setAttribute("config", "true");
+		button.setAttribute("oncommand", "serverbutton.toolbarButton.openConfig();");
+		button.setAttribute("tooltiptext", "Configure domain");
+		button.disabled=false;
+		document.getElementById("menuitem-connect").disabled=true;
+	} else {
+		button.removeAttribute("config");
+		button.removeAttribute("oncommand");
+		button.setAttribute("tooltiptext", "No domain");
+		button.disabled=true;
+		document.getElementById("menuitem-connect").disabled=true;
+	}
+};
+
+serverbutton.ToolbarButton.prototype.connect = function() {
+	var config = domainConfig.get(this.domain);
+
+	if(config != null) {
+		var command;
+		try {
+			command = new serverbutton.Command(config);
+		} catch(e) {
+			alert("Error: No command found for the selected type '" + config.type + "'.");
+			throw e;
 		}
-	};
-
-	this.connect = function() {
-		var config = domainConfig.get(this.domain);
-
-		if(config != null) {
-			var command;
-			try {
-				command = new Command(config);
-			} catch(e) {
-				alert("Error: No command found for the selected type '" + config.type + "'.");
-				return;
-			}
-			try {
-				command.run();
-			} catch(e) {
-				alert("Error: Couldn't run the command. Check the configuration.");
-				return;
-			}
+		try {
+			command.run();
+		} catch(e) {
+			alert("Error: Couldn't run the command. Check the configuration.");
+			throw e;
 		}
-	};
+	}
+};
 
-	this.openConfig = function() {
-		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", this.domain).focus();
-		this.updateButtonState();
-	};
-}
+serverbutton.ToolbarButton.prototype.openConfig = function() {
+	window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", this.domain).focus();
+	this.updateButtonState();
+};
 
-var toolbarButton = new ToolbarButton();
+serverbutton.toolbarButton = new serverbutton.ToolbarButton();
 
-window.addEventListener("load", toolbarButton.init, false);
-window.addEventListener("unload", toolbarButton.uninit, false);
+window.addEventListener("load", serverbutton.toolbarButton.init, false);
+window.addEventListener("unload", serverbutton.toolbarButton.uninit, false);

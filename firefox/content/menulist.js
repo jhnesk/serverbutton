@@ -18,75 +18,77 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 "use strict";
+var serverbutton = serverbutton || {};
 
-function MenuList(id) {
+serverbutton.MenuList = function(id) {
 
 	this.list = document.getElementById(id);
 
-	this.getItems = function() {
-		return this.list.getElementsByTagName("listitem");
-	};
+};
 
-	this.clear = function() {
-		var items = this.getItems();
-		for(var i = items.length-1; i >= 0; i--) {
-			this.list.removeChild(items[i]);
+serverbutton.MenuList.prototype.getItems = function() {
+	return this.list.getElementsByTagName("listitem");
+};
+
+serverbutton.MenuList.prototype.clear = function() {
+	var items = this.getItems();
+	for(var i = items.length-1; i >= 0; i--) {
+		this.list.removeChild(items[i]);
+	}
+};
+
+serverbutton.MenuList.prototype.addRow = function(labels) {
+	var row = document.createElement("listitem");
+
+	for(var i = 0; i < labels.length; i++) {
+		var cell = document.createElement("listcell");
+		cell.setAttribute("label", labels[i]);
+		row.appendChild(cell);
+	}
+
+	this.list.appendChild(row);
+};
+
+serverbutton.MenuList.prototype.selectFirst = function() {
+	this.list.selectedIndex = 0;
+};
+
+serverbutton.MenuList.prototype.removeSelected = function() {
+	this.list.removeChild(this.list.selectedItem);
+};
+
+serverbutton.MenuList.prototype.moveSelectedUp = function() {
+	var selected = this.list.selectedItem;
+	if(!selected) {
+		return;
+	}
+	var previous = selected.previousSibling;
+
+	if(previous && previous.tagName === "listitem") {
+		this.list.removeChild(selected);
+		this.list.insertBefore(selected, previous);
+		this.list.selectedItem = selected;
+	}
+};
+
+serverbutton.MenuList.prototype.moveSelectedDown = function() {
+	var selected = this.list.selectedItem;
+	if(!selected) {
+		return;
+	}
+	var next = selected.nextSibling;
+
+	if(next && next.tagName === "listitem") {
+		this.list.removeChild(selected);
+		if(next.nextSibling) {
+			this.list.insertBefore(selected, next.nextSibling);
+		} else {
+			this.list.appendChild(selected);
 		}
-	};
+		this.list.selectedItem = selected;
+	}
+};
 
-	this.addRow = function(labels) {
-		var row = document.createElement("listitem");
-
-		for(var i = 0; i < labels.length; i++) {
-			var cell = document.createElement("listcell");
-			cell.setAttribute("label", labels[i]);
-			row.appendChild(cell);
-		}
-
-		this.list.appendChild(row);
-	};
-
-	this.selectFirst = function() {
-		this.list.selectedIndex = 0;
-	};
-
-	this.removeSelected = function() {
-		this.list.removeChild(this.list.selectedItem);
-	};
-
-	this.moveSelectedUp = function() {
-		var selected = this.list.selectedItem;
-		if(!selected) {
-			return;
-		}
-		var previous = selected.previousSibling;
-
-		if(previous && previous.tagName === "listitem") {
-			this.list.removeChild(selected);
-			this.list.insertBefore(selected, previous);
-			this.list.selectedItem = selected;
-		}
-	};
-
-	this.moveSelectedDown = function() {
-		var selected = this.list.selectedItem;
-		if(!selected) {
-			return;
-		}
-		var next = selected.nextSibling;
-
-		if(next && next.tagName === "listitem") {
-			this.list.removeChild(selected);
-			if(next.nextSibling) {
-				this.list.insertBefore(selected, next.nextSibling);
-			} else {
-				this.list.appendChild(selected);
-			}
-			this.list.selectedItem = selected;
-		}
-	};
-
-	this.getSelectedItem = function() {
-		return this.list.selectedItem;
-	};
-}
+serverbutton.MenuList.prototype.getSelectedItem = function() {
+	return this.list.selectedItem;
+};

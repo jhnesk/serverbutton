@@ -6,7 +6,7 @@
 	ondialogcancel="return optiondialog.cancel();"
 	ondialogaccept="return optiondialog.save();"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="optiondialog=new OptionDialog();optiondialog.init();"
+	onload="optiondialog=new serverbutton.OptionDialog();optiondialog.init();"
 	>
 	<script src="options.js"/>
 	<script src="domain_dialog.js"/>
