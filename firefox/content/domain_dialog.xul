@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://serverbutton/locale/domain_dialog.dtd">
 <dialog id="serverbutton-domain-dialog"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	title="Configure domain"
+	title="&domain_dialog_title;"
 	buttons="accept,cancel,extra1"
-	buttonlabelextra1="Delete"
+	buttonlabelextra1="&button_delete;"
 	ondialogextra1="return dialogObject.remove();"
 	ondialogaccept="return dialogObject.save();"
 	onload="dialogObject=new serverbutton.DomainDialog();dialogObject.init();"
@@ -12,7 +13,7 @@
 	<script src="domain_dialog.js"/>
 	<label id="title-host" class="header"/>
 	<label control="serverbutton-configuration-type"
-		value="Type"/>
+		value="&label_type;"/>
 	<menulist id="serverbutton-configuration-type"
 		oncommand="return dialogObject.commandChange();"
 		>
@@ -24,5 +25,5 @@
 	<commandset>
 		<command id="toggle-password" oncommand="return dialogObject.togglePassword();"/>
 	</commandset>
-	<checkbox id="show-password" label="Show password" command="toggle-password" checked="false"/>
+	<checkbox id="show-password" label="&label_show_password;" command="toggle-password" checked="false"/>
 </dialog>

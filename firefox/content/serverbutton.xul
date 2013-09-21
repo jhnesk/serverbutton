@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://serverbutton/skin/button.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://serverbutton/locale/serverbutton.dtd">
 <overlay id="serverbutton" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<toolbarpalette id="BrowserToolbarPalette">
 		<script src="serverbutton.js"/>
 		<script src="command.js"/>
 		<toolbarbutton
 			id="serverbutton-toolbarbutton"
-			label="ServerButton"
+			label="&label;"
 			class="toolbarbutton-1 chromeclass-toolbar-additional"
 			type="menu-button"
 			>
 			<menupopup>
 				<menuitem
-					label="Connect"
+					label="&menu_connect;"
 					oncommand="serverbutton.toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
@@ -20,7 +21,7 @@
 					image="chrome://serverbutton/skin/icons/server.png"
 					/>
 				<menuitem
-					label="Edit current domain"
+					label="&menu_edit;"
 					oncommand="serverbutton.toolbarButton.openConfig();event.stopPropagation();"
 					id="menuitem-config"
 					/>
@@ -34,4 +35,7 @@
 			oncommand="serverbutton.toolbarButton.connect();"
 			/>
 	</keyset>
+	<stringbundleset>
+		<stringbundle id="serverbutton-toolbarbutton-strings" src="chrome://serverbutton/locale/serverbutton.properties"/>
+	</stringbundleset>
 </overlay>

@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://serverbutton/locale/options.dtd">
 <dialog
-	title="Server Button Options"
+	title="&options_dialog_title;"
 	buttons="accept,cancel"
 	ondialogcancel="return optiondialog.cancel();"
 	ondialogaccept="return optiondialog.save();"
@@ -14,8 +15,8 @@
 
 	<tabbox>
 		<tabs>
-			<tab label="Commands"/>
-			<tab label="Domain configuration"/>
+			<tab label="&tab_commands;"/>
+			<tab label="&tab_domains;"/>
 		</tabs>
 		<tabpanels>
 			<tabpanel id="commandtab">
@@ -27,26 +28,26 @@
 							</listcols>
 						</listbox>
 						<hbox>
-							<button label="Add" icon="add" onclick="optiondialog.addType();"/>
-							<button label="Remove" icon="remove" onclick="optiondialog.removeCommand(optiondialog.getSelectedType());"/>
+							<button label="&add;" icon="add" onclick="optiondialog.addType();"/>
+							<button label="&remove;" icon="remove" onclick="optiondialog.removeCommand(optiondialog.getSelectedType());"/>
 						</hbox>
 					</vbox>
 					<vbox flex="1">
-						<label value="Command:" control="config-command"/>
+						<label value="&label_command;" control="config-command"/>
 						<textbox id="config-command" style="min-width: 30em;"/>
-						<label value="Arguments:" control="config-arguments"/>
+						<label value="&label_arguments;" control="config-arguments"/>
 						<textbox id="config-arguments" style="min-width: 30em;"/>
 
-						<label value="Variables:" control="variableslist"/>
+						<label value="&label_variables;" control="variableslist"/>
 						<listbox id="variableslist" rows="4"
 							context="variablelistmenu"
 							ondblclick="optiondialog.openVariableConfig();"
 							>
 							<listhead flex="1">
-								<listheader label="Name"/>
-								<listheader label="Label"/>
-								<listheader label="Type"/>
-								<listheader label="Default"/>
+								<listheader label="&header_name;"/>
+								<listheader label="&header_label;"/>
+								<listheader label="&header_type;"/>
+								<listheader label="&header_default;"/>
 							</listhead>
 							<listcols>
 								<listcol flex="1"/>
@@ -56,25 +57,25 @@
 							</listcols>
 						</listbox>
 						<menupopup id="variablelistmenu">
-							<menuitem label="Edit"
+							<menuitem label="&edit;"
 								command="variable-edit"
 								/>
-							<menuitem label="Add"
+							<menuitem label="&add;"
 								command="variable-add"
 								class="menuitem-iconic"
 								image="chrome://serverbutton/skin/icons/add.png"
 								/>
-							<menuitem label="Delete"
+							<menuitem label="&remove;"
 								command="variable-delete"
 								class="menuitem-iconic"
 								image="chrome://serverbutton/skin/icons/delete.png"
 								/>
-							<menuitem label="Move up"
+							<menuitem label="&move_up;"
 								command="variable-up"
 								class="menuitem-iconic"
 								image="chrome://serverbutton/skin/icons/up.png"
 								/>
-							<menuitem label="Move down"
+							<menuitem label="&move_down;"
 								command="variable-down"
 								class="menuitem-iconic"
 								image="chrome://serverbutton/skin/icons/down.png"
@@ -82,9 +83,9 @@
 						</menupopup>
 						<hbox>
 							<spacer flex="1"/>
-							<button label="Restore defaults" icon="clear" onclick="optiondialog.restoreDefaultCommand();"/>
-							<button label="Reset" icon="clear" onclick="optiondialog.resetCommand();"/>
-							<button label="Apply" icon="apply" onclick="optiondialog.applyCommand();"/>
+							<button label="&button_restore;" icon="clear" onclick="optiondialog.restoreDefaultCommand();"/>
+							<button label="&button_reset;" icon="clear" onclick="optiondialog.resetCommand();"/>
+							<button label="&button_apply;" icon="apply" onclick="optiondialog.applyCommand();"/>
 						</hbox>
 					</vbox>
 				</hbox>
@@ -92,10 +93,10 @@
 			<tabpanel id="domaintab">
 				<vbox flex="1">
 					<menupopup id="domainconfigmenu">
-						<menuitem label="Edit"
+						<menuitem label="&edit;"
 							command="edit-item"
 							/>
-						<menuitem label="Delete"
+						<menuitem label="&remove;"
 							command="delete-item"
 							class="menuitem-iconic"
 							image="chrome://serverbutton/skin/icons/delete.png"
@@ -105,8 +106,8 @@
 						context="domainconfigmenu"
 						ondblclick="optiondialog.configlist.editAction();">
 						<listhead flex="1">
-							<listheader label="Domain"/>
-							<listheader label="Type"/>
+							<listheader label="&header_domain;"/>
+							<listheader label="&header_type;"/>
 						</listhead>
 						<listcols>
 							<listcol flex="1"/>
@@ -114,8 +115,8 @@
 						</listcols>
 					</listbox>
 					<hbox>
-						<button label="Import" icon="open" onclick="optiondialog.importConfig();"/>
-						<button label="Export" icon="save" onclick="optiondialog.exportConfig();"/>
+						<button label="&button_import;" icon="open" onclick="optiondialog.importConfig();"/>
+						<button label="&button_export;" icon="save" onclick="optiondialog.exportConfig();"/>
 					</hbox>
 				</vbox>
 			</tabpanel>
@@ -130,4 +131,7 @@
 		<command id="variable-edit" oncommand="return optiondialog.openVariableConfig();"/>
 		<command id="variable-delete" oncommand="return optiondialog.removeVariable();"/>
 	</commandset>
+	<stringbundleset>
+		<stringbundle id="serverbutton-options-strings" src="chrome://serverbutton/locale/options.properties"/>
+	</stringbundleset>
 </dialog>

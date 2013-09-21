@@ -1,0 +1,4 @@
+<!ENTITY title "Edit variable">
+<!ENTITY label_label "Label:">
+<!ENTITY label_type "Type:">
+<!ENTITY label_default "Default:">

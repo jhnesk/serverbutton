@@ -1,0 +1,21 @@
+<!ENTITY options_dialog_title "ServerButton Options">
+<!ENTITY tab_commands "Commands">
+<!ENTITY tab_domains "Domain configuration">
+<!ENTITY add "Add">
+<!ENTITY remove "Remove">
+<!ENTITY edit "Edit">
+<!ENTITY move_up "Move up">
+<!ENTITY move_down "Move down">
+<!ENTITY label_command "Command:">
+<!ENTITY label_arguments "Arguments:">
+<!ENTITY label_variables "Variables:">
+<!ENTITY header_name "Name">
+<!ENTITY header_label "Label">
+<!ENTITY header_type "Type">
+<!ENTITY header_default "Default">
+<!ENTITY header_domain "Domain">
+<!ENTITY button_restore "Restore defaults">
+<!ENTITY button_reset "Reset">
+<!ENTITY button_apply "Apply">
+<!ENTITY button_import "Import">
+<!ENTITY button_export "Export">

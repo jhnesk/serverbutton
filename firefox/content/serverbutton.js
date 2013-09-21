@@ -56,6 +56,7 @@ serverbutton.ToolbarButton = function() {
 	this.domain = null;
 	this.connectFunction = this.connect.bind(this);
 	this.openConfigFunction = this.openConfig.bind(this);
+	this.strings = document.getElementById("serverbutton-toolbarbutton-strings");
 };
 
 serverbutton.ToolbarButton.prototype.init = function() {
@@ -80,21 +81,24 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 		button.removeAttribute("config");
 		button.addEventListener("command", this.connectFunction, false);
 		button.removeEventListener("command", this.openConfigFunction, false);
-		button.setAttribute("tooltiptext", "Connect to " + config.host);
+		var tooltip = this.strings.getString("tooltipConnect");
+		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=false;
 	} else if(this.domain) {
 		button.setAttribute("config", "true");
 		button.removeEventListener("command", this.connectFunction, false);
 		button.addEventListener("command", this.openConfigFunction, false);
-		button.setAttribute("tooltiptext", "Configure domain");
+		var tooltip = this.strings.getString("tooltipConfigure");
+		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=true;
 	} else {
 		button.removeAttribute("config");
 		button.removeEventListener("command", this.connectFunction, false);
 		button.removeEventListener("command", this.openConfigFunction, false);
-		button.setAttribute("tooltiptext", "No domain");
+		var tooltip = this.strings.getString("tooltipNoDomain");
+		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=true;
 		document.getElementById("menuitem-connect").disabled=true;
 	}
@@ -108,13 +112,13 @@ serverbutton.ToolbarButton.prototype.connect = function() {
 		try {
 			command = new serverbutton.Command(config);
 		} catch(e) {
-			alert("Error: No command found for the selected type '" + config.type + "'.");
+			alert(this.strings.getString("errorNoCommand"));
 			throw e;
 		}
 		try {
 			command.run();
 		} catch(e) {
-			alert("Error: Couldn't run the command. Check the configuration.");
+			alert(this.strings.getString("errorRun"));
 			throw e;
 		}
 	}

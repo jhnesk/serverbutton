@@ -29,6 +29,8 @@ serverbutton.OptionDialog = function() {
 	this.commandlist;
 
 	this.variableslist;
+
+	this.strings = document.getElementById("serverbutton-options-strings");
 };
 
 serverbutton.OptionDialog.prototype.init = function() {
@@ -142,8 +144,10 @@ serverbutton.OptionDialog.prototype.addVariable = function(variable) {
 
 serverbutton.OptionDialog.prototype.newVariable = function() {
 	var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+	var title = this.strings.getString("newVariableTitle");
+	var label = this.strings.getString("newVariableKey");
 	var input = {value:""};
-	var result = promptService.prompt(null, "New variable", "Key:", input, null, {});
+	var result = promptService.prompt(null, title, label, input, null, {});
 	if(result && input.value) {
 		this.addVariable(input.value);
 	}
@@ -155,7 +159,9 @@ serverbutton.OptionDialog.prototype.removeVariable = function() {
 
 serverbutton.OptionDialog.prototype.removeCommand = function(type) {
 	var promtService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
-	if(promtService.confirm(window, "Remove command", "Are you sure you wan't to remove this command?")) {
+	var title = this.strings.getString("removeCommandTitle");
+	var confirmation = this.strings.getString("removeCommandConfirmation");
+	if(promtService.confirm(window, title, confirmation)) {
 		serverbutton.config.commands.remove(type);
 		this.removeFromList(type);
 	}
@@ -181,8 +187,10 @@ serverbutton.OptionDialog.prototype.removeFromList = function(type) {
 
 serverbutton.OptionDialog.prototype.addType = function() {
 	var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+	var title = this.strings.getString("newTypeTitle");
+	var label = this.strings.getString("newTypeKey");
 	var input = {value:""};
-	var result = promptService.prompt(null, "New type", "Key:", input, null, {});
+	var result = promptService.prompt(null, title, label, input, null, {});
 	if(result && input.value) {
 		serverbutton.config.commands.set(input.value, {command: "", variables: {}, args: ""});
 		this.commandlist.addRow([input.value]);
@@ -236,7 +244,7 @@ serverbutton.OptionDialog.prototype.restoreDefaultCommand = function() {
 	if(defaults[type]) {
 		serverbutton.config.commands.set(type, defaults[type]);
 	} else {
-		alert("No default found for " + type);
+		alert(this.strings.getString("errorNoDefault"));
 	}
 	this.fillCommandConfigFields();
 };
@@ -277,7 +285,8 @@ serverbutton.OptionDialog.prototype.importConfig = function() {
 serverbutton.OptionDialog.prototype.selectImportFile = function() {
 	var nsIFilePicker = Components.interfaces.nsIFilePicker;
 	var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-	filePicker.init(window, "Select a file for import", nsIFilePicker.modeOpen);
+	var title = this.strings.getString("importTitle");
+	filePicker.init(window, title, nsIFilePicker.modeOpen);
 	filePicker.appendFilter("json", "*.json");
 
 	var res = filePicker.show();
@@ -297,7 +306,8 @@ serverbutton.OptionDialog.prototype.exportConfig = function() {
 serverbutton.OptionDialog.prototype.selectExportFile = function() {
 	var nsIFilePicker = Components.interfaces.nsIFilePicker;
 	var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-	filePicker.init(window, "Select a file for export", nsIFilePicker.modeSave);
+	var title = this.strings.getString("exportTitle");
+	filePicker.init(window, title, nsIFilePicker.modeSave);
 	filePicker.appendFilter("json", "*.json");
 
 	var res = filePicker.show();
@@ -309,7 +319,6 @@ serverbutton.OptionDialog.prototype.selectExportFile = function() {
 serverbutton.ConfigList = function() {
 
 	this.list = new serverbutton.MenuList("configlist");
-
 };
 
 serverbutton.ConfigList.prototype.editAction = function() {
