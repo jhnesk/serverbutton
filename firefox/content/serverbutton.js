@@ -22,33 +22,34 @@ var serverbutton = serverbutton || {};
 
 Components.utils.import("resource://serverbutton/configuration.js");
 
-serverbutton.urlBarListener = {
-	QueryInterface: function(aIID)
-	{
+serverbutton.UrlBarListener = function(toolbarButton) {
+
+	this.toolbarButton = toolbarButton;
+
+	this.QueryInterface = function(aIID) {
 		if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
 				aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
 				aIID.equals(Components.interfaces.nsISupports))
 			return this;
 		throw Components.results.NS_NOINTERFACE;
-	},
+	};
 
-	onLocationChange: function(aProgress, aRequest, aURI)
-	{
+	this.onLocationChange = function(aProgress, aRequest, aURI) {
 		if(aURI) {
 			try {
-				serverbutton.toolbarButton.setDomain(aURI.host);
+				this.toolbarButton.setDomain(aURI.host);
 			} catch(err) {
-				serverbutton.toolbarButton.setDomain(null);
+				this.toolbarButton.setDomain(null);
 			}
 		} else {
-			serverbutton.toolbarButton.setDomain(null);
+			this.toolbarButton.setDomain(null);
 		}
-	},
+	};
 
-	onStateChange: function(a, b, c, d) {},
-	onProgressChange: function(a, b, c, d, e, f) {},
-	onStatusChange: function(a, b, c, d) {},
-	onSecurityChange: function(a, b, c) {}
+	this.onStateChange = function(a, b, c, d) {};
+	this.onProgressChange = function(a, b, c, d, e, f) {};
+	this.onStatusChange = function(a, b, c, d) {};
+	this.onSecurityChange = function(a, b, c) {};
 };
 
 serverbutton.ToolbarButton = function() {
@@ -57,15 +58,17 @@ serverbutton.ToolbarButton = function() {
 	this.connectFunction = this.connect.bind(this);
 	this.openConfigFunction = this.openConfig.bind(this);
 	this.strings;
+	this.urlBarListener;
 };
 
 serverbutton.ToolbarButton.prototype.init = function() {
-	gBrowser.addProgressListener(serverbutton.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
+	this.urlBarListener = new serverbutton.UrlBarListener(this);
+	gBrowser.addProgressListener(this.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
 	this.strings = document.getElementById("serverbutton-toolbarbutton-strings");
 };
 
 serverbutton.ToolbarButton.prototype.uninit = function() {
-	gBrowser.removeProgressListener(serverbutton.urlBarListener);
+	gBrowser.removeProgressListener(this.urlBarListener);
 };
 
 serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
