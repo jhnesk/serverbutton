@@ -26,7 +26,7 @@ serverbutton.Command = function(config) {
 
 	this.config = config;
 
-	this.command = ServerButtonConfig.commands.get(config.type);
+	this.command = serverbutton.config.commands.get(config.type);
 
 };
 

@@ -18,66 +18,69 @@
  * along with ServerButton.  If not, see <http://www.gnu.org/licenses/>.
  */
 "use strict";
+var serverbutton = serverbutton || {};
+
+var EXPORTED_SYMBOLS = ["serverbutton"];
 
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
-function ConfigFile(f) {
+serverbutton.ConfigFile = function(f) {
 
 	this.file = f;
 
 	this.config = {};
+};
 
-	this.get = function(key) {
-		return this.config[key];
-	};
+serverbutton.ConfigFile.prototype.get = function(key) {
+	return this.config[key];
+};
 
-	this.set = function(key, c) {
-		this.config[key] = c;
-	};
+serverbutton.ConfigFile.prototype.set = function(key, c) {
+	this.config[key] = c;
+};
 
-	this.remove = function(key) {
-		delete this.config[key];
-	};
+serverbutton.ConfigFile.prototype.remove = function(key) {
+	delete this.config[key];
+};
 
-	this.getAll = function() {
-		return this.config;
-	};
+serverbutton.ConfigFile.prototype.getAll = function() {
+	return this.config;
+};
 
-	this.load = function() {
+serverbutton.ConfigFile.prototype.load = function() {
 
-		if(!this.file.exists()) {
-			this.write(this.config);
-		}
-		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
-		istream.init(this.file, 0x01, 4, null);
-		var fileScriptableIO = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream); 
-		fileScriptableIO.init(istream);
-		istream.QueryInterface(Components.interfaces.nsILineInputStream); 
-		var content = "";
-		var csize = 0; 
-		while ((csize = fileScriptableIO.available()) != 0)
-		{
-			content += fileScriptableIO.read( csize );
-		}
-		fileScriptableIO.close();
-		istream.close();
-		this.config = JSON.parse(content);
-	};
-
-	this.write = function(jsonObject) {
-		var content = JSON.stringify(jsonObject);
-		if(!this.file.exists()) {
-			this.file.create(0, parseInt("0600", 8));
-		}
-		var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
-		stream.write(content, content.length);
-		stream.close();
-	};
-
-	this.save = function() {
+	if(!this.file.exists()) {
 		this.write(this.config);
-	};
-}
+	}
+	var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+	istream.init(this.file, 0x01, 4, null);
+	var fileScriptableIO = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
+	fileScriptableIO.init(istream);
+	istream.QueryInterface(Components.interfaces.nsILineInputStream);
+	var content = "";
+	var csize = 0;
+	while ((csize = fileScriptableIO.available()) != 0)
+	{
+		content += fileScriptableIO.read( csize );
+	}
+	fileScriptableIO.close();
+	istream.close();
+	this.config = JSON.parse(content);
+};
+
+serverbutton.ConfigFile.prototype.write = function(jsonObject) {
+	var content = JSON.stringify(jsonObject);
+	if(!this.file.exists()) {
+		this.file.create(0, parseInt("0600", 8));
+	}
+	var stream = FileUtils.openFileOutputStream(this.file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
+	stream.write(content, content.length);
+	stream.close();
+};
+
+serverbutton.ConfigFile.prototype.save = function() {
+	this.write(this.config);
+};
 
 function getDomainFile() {
 	var domainFile = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("ProfD", Components.interfaces.nsIFile);
@@ -93,7 +96,7 @@ function getCommandFile() {
 	return commandFile;
 }
 
-function getDefaultCommandConfig() {
+serverbutton.getDefaultCommandConfig = function() {
 
 	var linuxCommands = {
 		ssh: {
@@ -112,7 +115,7 @@ function getDefaultCommandConfig() {
 				"port": {
 					label: "Port",
 					type: "integer",
-					defaultValue: 22
+					defaultValue: "22"
 				}
 			},
 			args: "-e ssh ${user}@${host} -p ${port}"
@@ -210,19 +213,17 @@ function getDefaultCommandConfig() {
 		default:
 			return linuxCommands;
 	}
-}
+};
 
-var EXPORTED_SYMBOLS = ["ServerButtonConfig", "getDefaultCommandConfig", "ConfigFile"];
+serverbutton.config = {};
 
-var ServerButtonConfig = {};
-
-ServerButtonConfig.domains = new ConfigFile(getDomainFile());
-ServerButtonConfig.domains.load();
+serverbutton.config.domains = new serverbutton.ConfigFile(getDomainFile());
+serverbutton.config.domains.load();
 
 var commandFile = getCommandFile();
-ServerButtonConfig.commands = new ConfigFile(commandFile);
+serverbutton.config.commands = new serverbutton.ConfigFile(commandFile);
 if(!commandFile.exists()) {
-	ServerButtonConfig.commands.config = getDefaultCommandConfig();
+	serverbutton.config.commands.config = serverbutton.getDefaultCommandConfig();
 }
-ServerButtonConfig.commands.load();
+serverbutton.config.commands.load();
 

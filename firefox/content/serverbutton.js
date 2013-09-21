@@ -22,7 +22,7 @@ var serverbutton = serverbutton || {};
 
 Components.utils.import("resource://serverbutton/configuration.js");
 
-var ServerButton_urlBarListener = {
+serverbutton.urlBarListener = {
 	QueryInterface: function(aIID)
 	{
 		if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
@@ -57,11 +57,11 @@ serverbutton.ToolbarButton = function() {
 };
 
 serverbutton.ToolbarButton.prototype.init = function() {
-	gBrowser.addProgressListener(ServerButton_urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
+	gBrowser.addProgressListener(serverbutton.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
 };
 
 serverbutton.ToolbarButton.prototype.uninit = function() {
-	gBrowser.removeProgressListener(ServerButton_urlBarListener);
+	gBrowser.removeProgressListener(serverbutton.urlBarListener);
 };
 
 serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
@@ -71,7 +71,7 @@ serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
 
 serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 	var button = document.getElementById("serverbutton-toolbarbutton");
-	var config = ServerButtonConfig.domains.get(this.domain);
+	var config = serverbutton.config.domains.get(this.domain);
 	if(config) {
 		button.removeAttribute("config");
 		button.setAttribute("oncommand", "serverbutton.toolbarButton.connect();");
@@ -94,7 +94,7 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 };
 
 serverbutton.ToolbarButton.prototype.connect = function() {
-	var config = ServerButtonConfig.domains.get(this.domain);
+	var config = serverbutton.config.domains.get(this.domain);
 
 	if(config != null) {
 		var command;
