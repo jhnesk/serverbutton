@@ -55,7 +55,7 @@ serverbutton.Command.prototype.run = function() {
 
 	var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
 	process.init(file);
-	process.run(false, args, args.length);
+	process.runw(false, args, args.length);
 };
 
 serverbutton.Command.prototype.parseArguments = function(arg) {
