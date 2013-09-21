@@ -56,11 +56,12 @@ serverbutton.ToolbarButton = function() {
 	this.domain = null;
 	this.connectFunction = this.connect.bind(this);
 	this.openConfigFunction = this.openConfig.bind(this);
-	this.strings = document.getElementById("serverbutton-toolbarbutton-strings");
+	this.strings;
 };
 
 serverbutton.ToolbarButton.prototype.init = function() {
 	gBrowser.addProgressListener(serverbutton.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
+	this.strings = document.getElementById("serverbutton-toolbarbutton-strings");
 };
 
 serverbutton.ToolbarButton.prototype.uninit = function() {
@@ -131,5 +132,5 @@ serverbutton.ToolbarButton.prototype.openConfig = function() {
 
 serverbutton.toolbarButton = new serverbutton.ToolbarButton();
 
-window.addEventListener("load", serverbutton.toolbarButton.init, false);
+window.addEventListener("load", serverbutton.toolbarButton.init.bind(serverbutton.toolbarButton), false);
 window.addEventListener("unload", serverbutton.toolbarButton.uninit, false);
