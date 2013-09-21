@@ -54,6 +54,8 @@ serverbutton.urlBarListener = {
 serverbutton.ToolbarButton = function() {
 
 	this.domain = null;
+	this.connectFunction = this.connect.bind(this);
+	this.openConfigFunction = this.openConfig.bind(this);
 };
 
 serverbutton.ToolbarButton.prototype.init = function() {
@@ -71,22 +73,27 @@ serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
 
 serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 	var button = document.getElementById("serverbutton-toolbarbutton");
+
 	var config = serverbutton.config.domains.get(this.domain);
+
 	if(config) {
 		button.removeAttribute("config");
-		button.setAttribute("oncommand", "serverbutton.toolbarButton.connect();");
+		button.addEventListener("command", this.connectFunction, false);
+		button.removeEventListener("command", this.openConfigFunction, false);
 		button.setAttribute("tooltiptext", "Connect to " + config.host);
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=false;
 	} else if(this.domain) {
 		button.setAttribute("config", "true");
-		button.setAttribute("oncommand", "serverbutton.toolbarButton.openConfig();");
+		button.removeEventListener("command", this.connectFunction, false);
+		button.addEventListener("command", this.openConfigFunction, false);
 		button.setAttribute("tooltiptext", "Configure domain");
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=true;
 	} else {
 		button.removeAttribute("config");
-		button.removeAttribute("oncommand");
+		button.removeEventListener("command", this.connectFunction, false);
+		button.removeEventListener("command", this.openConfigFunction, false);
 		button.setAttribute("tooltiptext", "No domain");
 		button.disabled=true;
 		document.getElementById("menuitem-connect").disabled=true;
