@@ -1,10 +1,23 @@
 ServerButton
 ============
 
-This is a simple firefox extension to launch a command depending on the
-domain loaded in the current tab. The intended purpose is to login to
-the webserver, which can be really useful when you need quick access to
-many different servers.
+This is a simple firefox extension to run an external command depending
+on the webpage loaded in the current tab. The intended purpose is to
+login to the webserver, which can be really useful when you need quick
+access to many different servers.
+
+To get started, check the command configuration and add the toolbar
+button to a toolbar of your choice.
+
+Install from mozilla:
+<https://addons.mozilla.org/en-US/firefox/addon/serverbutton/>
+
+Screenshots:
+------------
+
+![ScreenShot](https://raw.github.com/jhnesk/serverbutton/master/screenshots/options.png)
+
+![ScreenShot](https://raw.github.com/jhnesk/serverbutton/master/screenshots/domain.png)
 
 License:
 --------
