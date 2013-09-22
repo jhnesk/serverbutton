@@ -14,7 +14,6 @@
 			<menupopup>
 				<menuitem
 					label="&menu_connect;"
-					oncommand="serverbutton.toolbarButton.connect();event.stopPropagation();"
 					id="menuitem-connect"
 					key="serverbutton-shortcut"
 					class="menuitem-iconic"
@@ -22,7 +21,6 @@
 					/>
 				<menuitem
 					label="&menu_edit;"
-					oncommand="serverbutton.toolbarButton.openConfig();event.stopPropagation();"
 					id="menuitem-config"
 					/>
 			</menupopup>
@@ -32,7 +30,7 @@
 		<key
 			id="serverbutton-shortcut"
 			modifiers="accel alt" key="o"
-			oncommand="serverbutton.toolbarButton.connect();"
+			oncommand="//"
 			/>
 	</keyset>
 	<stringbundleset>
