@@ -57,8 +57,8 @@ serverbutton.ToolbarButton = function() {
 	this.domain = null;
 	this.connectFunction = this.createEventHandler(this.connect);
 	this.openConfigFunction = this.createEventHandler(this.openConfig);
-	this.strings;
 	this.urlBarListener;
+	this.buttonUsed;
 };
 
 serverbutton.ToolbarButton.prototype.createEventHandler = function(f) {
@@ -72,7 +72,17 @@ serverbutton.ToolbarButton.prototype.createEventHandler = function(f) {
 serverbutton.ToolbarButton.prototype.init = function() {
 	this.urlBarListener = new serverbutton.UrlBarListener(this);
 	gBrowser.addProgressListener(this.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
-	this.strings = document.getElementById("serverbutton-toolbarbutton-strings");
+
+	var button = document.getElementById("serverbutton-toolbarbutton");
+	if(button) {
+		this.buttonUsed = true;
+		this.setupMenuEvents();
+	} else {
+		this.buttonUsed = false;
+	}
+};
+
+serverbutton.ToolbarButton.prototype.setupMenuEvents = function() {
 	var menuitemConnect = document.getElementById("menuitem-connect");
 	menuitemConnect.addEventListener("command", this.connectFunction, false);
 	var menuitemConfig = document.getElementById("menuitem-config");
@@ -92,14 +102,20 @@ serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
 
 serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 	var button = document.getElementById("serverbutton-toolbarbutton");
+	if(!button) return;
+	if(!this.buttonUsed) {
+		this.setupMenuEvents();
+		this.buttonUsed = true;
+	}
 
+	var strings = document.getElementById("serverbutton-toolbarbutton-strings");
 	var config = serverbutton.config.domains.get(this.domain);
 
 	if(config) {
 		button.removeAttribute("config");
 		button.addEventListener("command", this.connectFunction, false);
 		button.removeEventListener("command", this.openConfigFunction, false);
-		var tooltip = this.strings.getString("tooltipConnect");
+		var tooltip = strings.getString("tooltipConnect");
 		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=false;
@@ -107,7 +123,7 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 		button.setAttribute("config", "true");
 		button.removeEventListener("command", this.connectFunction, false);
 		button.addEventListener("command", this.openConfigFunction, false);
-		var tooltip = this.strings.getString("tooltipConfigure");
+		var tooltip = strings.getString("tooltipConfigure");
 		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=false;
 		document.getElementById("menuitem-connect").disabled=true;
@@ -115,7 +131,7 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 		button.removeAttribute("config");
 		button.removeEventListener("command", this.connectFunction, false);
 		button.removeEventListener("command", this.openConfigFunction, false);
-		var tooltip = this.strings.getString("tooltipNoDomain");
+		var tooltip = strings.getString("tooltipNoDomain");
 		button.setAttribute("tooltiptext", tooltip);
 		button.disabled=true;
 		document.getElementById("menuitem-connect").disabled=true;
@@ -124,19 +140,20 @@ serverbutton.ToolbarButton.prototype.updateButtonState = function() {
 
 serverbutton.ToolbarButton.prototype.connect = function() {
 	var config = serverbutton.config.domains.get(this.domain);
+	var strings = document.getElementById("serverbutton-toolbarbutton-strings");
 
 	if(config != null) {
 		var command;
 		try {
 			command = new serverbutton.Command(config);
 		} catch(e) {
-			alert(this.strings.getString("errorNoCommand"));
+			alert(strings.getString("errorNoCommand"));
 			throw e;
 		}
 		try {
 			command.run();
 		} catch(e) {
-			alert(this.strings.getString("errorRun"));
+			alert(strings.getString("errorRun"));
 			throw e;
 		}
 	}
