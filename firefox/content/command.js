@@ -58,6 +58,32 @@ serverbutton.Command.prototype.run = function() {
 	process.runw(false, args, args.length);
 };
 
-serverbutton.Command.prototype.parseArguments = function(arg) {
-	return arg.split(" ");
+serverbutton.Command.prototype.parseArguments = function(line) {
+	var args = [];
+	var arg = "";
+	var quoted = false;
+	var escaped = false;
+
+	for(var i = 0; i < line.length; i++) {
+		var nextChar = line.charAt(i);
+
+		if(escaped) {
+			escaped = false;
+			arg = arg.concat(nextChar);
+		} else if(!quoted && nextChar == " ") {
+			args.push(arg);
+			arg = "";
+		} else if(nextChar == "\\") {
+			escaped = true;
+		} else if(nextChar == "\"") {
+			quoted = !quoted;
+		} else {
+			arg = arg.concat(nextChar);
+		}
+	}
+	if(arg) {
+		args.push(arg);
+	}
+
+	return args;
 };
