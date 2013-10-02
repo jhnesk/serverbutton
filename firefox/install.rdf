@@ -5,7 +5,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>serverbutton@jhnesk.se</em:id>
 		<em:name>ServerButton</em:name>
-		<em:version>0.5.12</em:version>
+		<em:version>0.5.13</em:version>
 		<em:type>2</em:type>
 
 		<em:optionsURL>chrome://serverbutton/content/options.xul</em:optionsURL>

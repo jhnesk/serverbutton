@@ -22,9 +22,7 @@ var serverbutton = serverbutton || {};
 
 Components.utils.import("resource://serverbutton/configuration.js");
 
-serverbutton.UrlBarListener = function(toolbarButton) {
-
-	this.toolbarButton = toolbarButton;
+serverbutton.UrlBarListener = function() {
 
 	this.QueryInterface = function(aIID) {
 		if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
@@ -37,12 +35,12 @@ serverbutton.UrlBarListener = function(toolbarButton) {
 	this.onLocationChange = function(aProgress, aRequest, aURI) {
 		if(aURI) {
 			try {
-				this.toolbarButton.setDomain(aURI.host);
+				serverbutton.ToolbarButton.setDomain(aURI.host);
 			} catch(err) {
-				this.toolbarButton.setDomain(null);
+				serverbutton.ToolbarButton.setDomain(null);
 			}
 		} else {
-			this.toolbarButton.setDomain(null);
+			serverbutton.ToolbarButton.setDomain(null);
 		}
 	};
 
@@ -52,120 +50,93 @@ serverbutton.UrlBarListener = function(toolbarButton) {
 	this.onSecurityChange = function(a, b, c) {};
 };
 
-serverbutton.ToolbarButton = function() {
+serverbutton.ToolbarButton = (function() {
+	var exports = {};
 
-	this.domain = null;
-	this.connectFunction = this.createEventHandler(this.connect);
-	this.openConfigFunction = this.createEventHandler(this.openConfig);
-	this.urlBarListener;
-	this.buttonUsed;
-};
+	var domain = null;
 
-serverbutton.ToolbarButton.prototype.createEventHandler = function(f) {
-	var fun = f.bind(this);
-	return function(event) {
-		event.stopPropagation();
-		fun();
+	var urlBarListener = new serverbutton.UrlBarListener();
+
+	function init() {
+		gBrowser.addProgressListener(urlBarListener);
+	}
+
+	function uninit() {
+		gBrowser.removeProgressListener(urlBarListener);
+	}
+
+	function setDomain(d) {
+		domain = d;
+		updateButtonState();
+	}
+
+	function updateButtonState() {
+		var button = document.getElementById("serverbutton-toolbarbutton");
+		if(!button) return;
+		var strings = document.getElementById("serverbutton-toolbarbutton-strings");
+		var config = serverbutton.config.domains.get(domain);
+
+		if(config) {
+			button.removeAttribute("config");
+			button.addEventListener("command", connect, false);
+			button.removeEventListener("command", openConfig, false);
+			var tooltip = strings.getString("tooltipConnect");
+			button.setAttribute("tooltiptext", tooltip);
+			button.disabled=false;
+			document.getElementById("serverbutton-menuitem-connect").disabled=false;
+		} else if(domain) {
+			button.setAttribute("config", "true");
+			button.removeEventListener("command", connect, false);
+			button.addEventListener("command", openConfig, false);
+			var tooltip = strings.getString("tooltipConfigure");
+			button.setAttribute("tooltiptext", tooltip);
+			button.disabled=false;
+			document.getElementById("serverbutton-menuitem-connect").disabled=true;
+		} else {
+			button.removeAttribute("config");
+			button.removeEventListener("command", connect, false);
+			button.removeEventListener("command", openConfig, false);
+			var tooltip = strings.getString("tooltipNoDomain");
+			button.setAttribute("tooltiptext", tooltip);
+			button.disabled=true;
+			document.getElementById("serverbutton-menuitem-connect").disabled=true;
+		}
+	}
+
+	function connect() {
+		var config = serverbutton.config.domains.get(domain);
+		var strings = document.getElementById("serverbutton-toolbarbutton-strings");
+
+		if(config != null) {
+			var command;
+			try {
+				command = new serverbutton.Command(config);
+			} catch(e) {
+				alert(strings.getString("errorNoCommand"));
+				throw e;
+			}
+			try {
+				command.run();
+			} catch(e) {
+				alert(strings.getString("errorRun"));
+				throw e;
+			}
+		}
+	}
+
+	function openConfig() {
+		window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", domain).focus();
+		updateButtonState();
+	}
+
+	return {
+		connect: connect,
+		openConfig: openConfig,
+		setDomain: setDomain,
+		init: init,
+		uninit: uninit,
 	};
-};
-
-serverbutton.ToolbarButton.prototype.init = function() {
-	this.urlBarListener = new serverbutton.UrlBarListener(this);
-	gBrowser.addProgressListener(this.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
-
-	var button = document.getElementById("serverbutton-toolbarbutton");
-	if(button) {
-		this.buttonUsed = true;
-		this.setupMenuEvents();
-	} else {
-		this.buttonUsed = false;
-	}
-};
-
-serverbutton.ToolbarButton.prototype.setupMenuEvents = function() {
-	var menuitemConnect = document.getElementById("menuitem-connect");
-	menuitemConnect.addEventListener("command", this.connectFunction, false);
-	var menuitemConfig = document.getElementById("menuitem-config");
-	menuitemConfig.addEventListener("command", this.openConfigFunction, false);
-	var menuitemShortCut = document.getElementById("serverbutton-shortcut");
-	menuitemShortCut.addEventListener("command", this.connectFunction, false);
-};
-
-serverbutton.ToolbarButton.prototype.uninit = function() {
-	gBrowser.removeProgressListener(this.urlBarListener);
-};
-
-serverbutton.ToolbarButton.prototype.setDomain = function(domain) {
-	this.domain = domain;
-	this.updateButtonState();
-};
-
-serverbutton.ToolbarButton.prototype.updateButtonState = function() {
-	var button = document.getElementById("serverbutton-toolbarbutton");
-	if(!button) return;
-	if(!this.buttonUsed) {
-		this.setupMenuEvents();
-		this.buttonUsed = true;
-	}
-
-	var strings = document.getElementById("serverbutton-toolbarbutton-strings");
-	var config = serverbutton.config.domains.get(this.domain);
-
-	if(config) {
-		button.removeAttribute("config");
-		button.addEventListener("command", this.connectFunction, false);
-		button.removeEventListener("command", this.openConfigFunction, false);
-		var tooltip = strings.getString("tooltipConnect");
-		button.setAttribute("tooltiptext", tooltip);
-		button.disabled=false;
-		document.getElementById("menuitem-connect").disabled=false;
-	} else if(this.domain) {
-		button.setAttribute("config", "true");
-		button.removeEventListener("command", this.connectFunction, false);
-		button.addEventListener("command", this.openConfigFunction, false);
-		var tooltip = strings.getString("tooltipConfigure");
-		button.setAttribute("tooltiptext", tooltip);
-		button.disabled=false;
-		document.getElementById("menuitem-connect").disabled=true;
-	} else {
-		button.removeAttribute("config");
-		button.removeEventListener("command", this.connectFunction, false);
-		button.removeEventListener("command", this.openConfigFunction, false);
-		var tooltip = strings.getString("tooltipNoDomain");
-		button.setAttribute("tooltiptext", tooltip);
-		button.disabled=true;
-		document.getElementById("menuitem-connect").disabled=true;
-	}
-};
-
-serverbutton.ToolbarButton.prototype.connect = function() {
-	var config = serverbutton.config.domains.get(this.domain);
-	var strings = document.getElementById("serverbutton-toolbarbutton-strings");
-
-	if(config != null) {
-		var command;
-		try {
-			command = new serverbutton.Command(config);
-		} catch(e) {
-			alert(strings.getString("errorNoCommand"));
-			throw e;
-		}
-		try {
-			command.run();
-		} catch(e) {
-			alert(strings.getString("errorRun"));
-			throw e;
-		}
-	}
-};
-
-serverbutton.ToolbarButton.prototype.openConfig = function() {
-	window.openDialog("chrome://serverbutton/content/domain_dialog.xul", "serverbutton-domain-dialog", "chrome,dialog,centerscreen,modal", this.domain).focus();
-	this.updateButtonState();
-};
-
-(function() {
-	var toolbarButton = new serverbutton.ToolbarButton();
-	window.addEventListener("load", toolbarButton.init.bind(toolbarButton), false);
-	window.addEventListener("unload", toolbarButton.uninit, false);
 })();
+
+window.addEventListener("load", serverbutton.ToolbarButton.init, false);
+window.addEventListener("unload", serverbutton.ToolbarButton.uninit, false);

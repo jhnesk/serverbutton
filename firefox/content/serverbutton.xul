@@ -14,14 +14,15 @@
 			<menupopup>
 				<menuitem
 					label="&menu_connect;"
-					id="menuitem-connect"
 					key="serverbutton-shortcut"
+					id="serverbutton-menuitem-connect"
 					class="menuitem-iconic"
 					image="chrome://serverbutton/skin/icons/server.png"
+					oncommand="serverbutton.ToolbarButton.connect();event.stopPropagation();"
 					/>
 				<menuitem
 					label="&menu_edit;"
-					id="menuitem-config"
+					oncommand="serverbutton.ToolbarButton.openConfig();event.stopPropagation();"
 					/>
 			</menupopup>
 		</toolbarbutton>
@@ -30,7 +31,7 @@
 		<key
 			id="serverbutton-shortcut"
 			modifiers="accel alt" key="o"
-			oncommand="//"
+			oncommand="serverbutton.ToolbarButton.connect();"
 			/>
 	</keyset>
 	<stringbundleset>
