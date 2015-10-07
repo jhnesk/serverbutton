@@ -12,15 +12,21 @@ button to a toolbar of your choice.
 Install from mozilla:
 <https://addons.mozilla.org/en-US/firefox/addon/serverbutton/>
 
-Screenshots:
-------------
+Security
+--------
+
+Note that any password is saved in plain text on your computer. It could
+be read by other programs and even other extensions.
+
+Screenshots
+-----------
 
 ![ScreenShot](https://raw.github.com/jhnesk/serverbutton/master/screenshots/options.png)
 
 ![ScreenShot](https://raw.github.com/jhnesk/serverbutton/master/screenshots/domain.png)
 
-License:
---------
+License
+-------
 
 > ServerButton is free software: you can redistribute it and/or modify it
 > under the terms of the GNU General Public License as published by the

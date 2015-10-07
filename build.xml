@@ -3,7 +3,11 @@
 
 	<target name="firefox">
 		<echo message="Building firefox installation file" />
-		<zip destfile="serverbutton.xpi" basedir="firefox" />
+		<zip destfile="serverbutton.xpi" basedir="firefox" excludes="test" />
+	</target>
+
+	<target name="clean">
+		<delete file="serverbutton.xpi" />
 	</target>
 
 </project>
